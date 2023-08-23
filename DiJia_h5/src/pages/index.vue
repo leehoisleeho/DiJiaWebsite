@@ -3,8 +3,7 @@
   <div class="header">
     <div style="padding: 0 16px">
       <t-swiper :navigation="{ type: 'dots' }" :autoplay="true">
-        <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px"
-          @touchstart="swiperClick(index)">
+        <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px">
           <img :src="item" class="img" />
         </t-swiper-item>
       </t-swiper>

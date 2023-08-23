@@ -57,6 +57,7 @@
   margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 100px;
 }
 .infoBoxList_1>.infoBoxListItem{
   color: #333;
