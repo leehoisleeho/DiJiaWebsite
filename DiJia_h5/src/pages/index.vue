@@ -1,76 +1,77 @@
 <template>
-  <!-- 轮播图 -->
-  <div class="header">
-    <div style="padding: 0 16px">
-      <t-swiper :navigation="{ type: 'dots' }" :autoplay="true">
-        <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px">
-          <img :src="item" class="img" />
-        </t-swiper-item>
-      </t-swiper>
+  <div class="container">
+    <!-- 轮播图 -->
+    <div class="header">
+      <div style="padding: 0 16px">
+        <t-swiper :navigation="{ type: 'dots' }" :autoplay="true">
+          <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px">
+            <img :src="item" class="img" />
+          </t-swiper-item>
+        </t-swiper>
+      </div>
     </div>
-  </div>
-  <!-- 金刚区 -->
-  <div class="navBox">
-    <ul class="navBox_item">
-      <li v-for="{ item, index } in 7" @touchstart="toProjectDetails">
-        <img src="../../public/imgs/douyin.png" alt="">
-        <span>抖音拍摄</span>
-      </li>
-    </ul>
-  </div>
-  <!-- 新闻列表 -->
-  <div class="newsBox">
-    <div class="newsBoxTitle">
-      新闻专区
+    <!-- 金刚区 -->
+    <div class="navBox">
+      <ul class="navBox_item">
+        <li v-for="{ item, index } in 7" @click="toProjectDetails">
+          <img src="../../public/imgs/douyin.png" alt="">
+          <span>抖音拍摄</span>
+        </li>
+      </ul>
     </div>
-    <ul class="newsBoxList">
-      <li @touchstart="toNewsDetails">
-        <div class="newsBoxListImg">
-          <img src="../../public/imgs/newsImg.png" alt="">
-        </div>
-        <div class="newsListInfo">
-          <div>这是一个新闻的标题</div>
-          <div>2023-08-23</div>
-          <div>这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容</div>
-        </div>
-      </li>
-    </ul>
-    <div class="newsBoxFoot">查看更多</div>
-  </div>
-  <!-- 关于我们 -->
-  <div class="about" @touchstart="toAbout">
-    <div class="newsBoxTitle">
-      关于我们
+    <!-- 新闻列表 -->
+    <div class="newsBox">
+      <div class="newsBoxTitle">
+        新闻专区
+      </div>
+      <ul class="newsBoxList">
+        <li @touchend="toNewsDetails">
+          <div class="newsBoxListImg">
+            <img src="../../public/imgs/newsImg.png" alt="">
+          </div>
+          <div class="newsListInfo">
+            <div>这是一个新闻的标题</div>
+            <div>2023-08-23</div>
+            <div>这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容</div>
+          </div>
+        </li>
+      </ul>
+      <div class="newsBoxFoot">查看更多</div>
     </div>
-    <div class="aboutImg">
-      <img src="../../public/imgs/about.png" alt="">
+    <!-- 关于我们 -->
+    <div class="about" @touchstart="toAbout">
+      <div class="newsBoxTitle">
+        关于我们
+      </div>
+      <div class="aboutImg">
+        <img src="../../public/imgs/about.png" alt="">
+      </div>
     </div>
+    <!-- 底部 -->
+    <t-footer text="Copyright © 2020-2023 迪迦文化传媒公司" />
   </div>
-  <!-- 底部 -->
-  <t-footer text="Copyright © 2020-2023 迪迦文化传媒公司" />
 </template>
 
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
+
 const swiperList = [
   "../../public/imgs/封面1.jpg",
   "../../public/imgs/封面2.jpg"
 ];
 
-const swiperClick = (e) => {
-  console.log(e)
-  toNewsDetails()
-};
-// 金刚区图片被点击
+//金刚区图片被点击
 const toProjectDetails = () => {
   router.push('/projectDetais');
 }
+
 // 去文章详情页
 const toNewsDetails = () => {
   router.push('/newsDetails');
 }
+
 // 去关于我们
 const toAbout = () => {
   router.push('/about');
@@ -78,6 +79,11 @@ const toAbout = () => {
 </script>
 
 <style scoped>
+.container{
+  touch-action: manipulation; /* 阻止默认滚动和缩放，允许手势操作 */
+  border: 1px solid red;
+}
+
 .newsListInfo>div:nth-child(3) {
   font-size: 23px;
   color: #999;
@@ -202,4 +208,5 @@ img {
 
 .navBox {
   padding: 0px;
-}</style>
+}
+</style>
