@@ -2,10 +2,14 @@
   <div class="container">
     <!-- 轮播图 -->
     <div class="header">
-      <div style="padding: 0 16px">
-        <t-swiper :navigation="{ type: 'dots' }" :autoplay="true">
-          <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px">
-            <img :src="item" class="img" />
+      <div style="padding: 0 10px" >
+        <t-swiper :navigation="{ type: 'dots-bar' }" >
+          <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px" 
+          @touchstart="handleTouchstart"
+          @touchend="handleTouchend(index)"
+          @touchmove="handleTouchmove"
+          >
+            <img :src="item" />
           </t-swiper-item>
         </t-swiper>
       </div>
@@ -25,7 +29,7 @@
         新闻专区
       </div>
       <ul class="newsBoxList">
-        <li @touchend="toNewsDetails">
+        <li @click="toNewsDetails">
           <div class="newsBoxListImg">
             <img src="../../public/imgs/newsImg.png" alt="">
           </div>
@@ -39,7 +43,7 @@
       <div class="newsBoxFoot">查看更多</div>
     </div>
     <!-- 关于我们 -->
-    <div class="about" @touchstart="toAbout">
+    <div class="about" @click="toAbout">
       <div class="newsBoxTitle">
         关于我们
       </div>
@@ -53,9 +57,50 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
+
+// 通过判断Touchstart和Touchendh滑动的距离 判断是点击事件 还是滑动事件
+/**
+ * 腾讯轮播组件有问题 无法触发点击事件
+ * 1. 首先定义4个变量
+ * 2. 在touchstart中获取开始的坐标
+ * 3. 在touchmove中获取结束的坐标
+ * 4. 在touchend中判断滑动的距离
+ * 5. 如果滑动的距离大于5px 则是滑动事件
+ * 6. 如果滑动的距离小于5px 则是点击事件
+ * 7. 在touchend中将isClick重置为true
+ */
+let startX = 0;
+let startY = 0;
+let endX = 0;
+let endY = 0;
+let distanceX = 0;
+let distanceY = 0;
+let isClick = true;
+const handleTouchstart = (e) => {
+  startX = e.touches[0].pageX;
+  startY = e.touches[0].pageY;
+}
+const handleTouchmove = (e) => {
+  endX = e.touches[0].pageX;
+  endY = e.touches[0].pageY;
+  distanceX = endX - startX;
+  distanceY = endY - startY;
+  if (Math.abs(distanceX) > 5 || Math.abs(distanceY) > 5) {
+    isClick = false;
+  }
+}
+const handleTouchend = (index) => {
+  if (isClick) {
+    // 点击时候处理的逻辑写这里
+    console.log('点击事件',index)
+  }
+  isClick = true;
+}
+
 
 const swiperList = [
   "../../public/imgs/封面1.jpg",
@@ -63,7 +108,8 @@ const swiperList = [
 ];
 
 //金刚区图片被点击
-const toProjectDetails = () => {
+const toProjectDetails = (e) => {
+  console.log(e);
   router.push('/projectDetais');
 }
 
@@ -79,11 +125,6 @@ const toAbout = () => {
 </script>
 
 <style scoped>
-.container{
-  touch-action: manipulation; /* 阻止默认滚动和缩放，允许手势操作 */
-  border: 1px solid red;
-}
-
 .newsListInfo>div:nth-child(3) {
   font-size: 23px;
   color: #999;
