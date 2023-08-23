@@ -1,6 +1,5 @@
 export default  {
   plugins: {
-    autoprefixer: {},
     "postcss-px-to-viewport": {
       unitToConvert: "px",
       viewportWidth: 750,
