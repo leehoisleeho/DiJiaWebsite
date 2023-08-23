@@ -1,17 +1,16 @@
 <template>
+  <!-- 轮播图 -->
   <div class="header">
-    你好我是H5首页
-  </div>
-    
+    <t-button size="large" theme="primary">填充按钮</t-button>
+  </div>  
 </template>
 
 <script setup>
- 
+  
 </script>
 
 <style scoped>
  .header{
-   border: 1px solid red;
-   width: 750px;
+   
  }
 </style>

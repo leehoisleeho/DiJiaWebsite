@@ -9,6 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "tdesign-mobile-vue": "^1.0.2",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.1",
     "vue": "^3.3.4"
   },
   "devDependencies": {
