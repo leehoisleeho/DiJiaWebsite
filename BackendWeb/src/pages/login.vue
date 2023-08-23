@@ -11,7 +11,7 @@
       <div>
         <div class="loginBox_itme">
           <img src="../assets/imgs/loginImg.png" alt="">
-          <h3>迪迦文化传媒公司后台管理系统 </h3>
+          <h3>登录 Login</h3>
           <div class="loginBox_itme_1">
             <t-input type="text" placeholder="请输入账号" style="margin-bottom: 20px;"/>
             <t-input type="password" placeholder="请输入密码" />
@@ -33,7 +33,7 @@
 }
 .loginBox_itme>h3 {
   margin-top: 20px;
-  color: #3c3c3c;
+  color: #585858;
   font-weight: 400;
   font-size: 30px;
 }
@@ -44,7 +44,7 @@
 }
 
 .loginBox_itme>img {
-  width: 200px;
+  width: 240px;
 }
 
 .loginBox_itme {
