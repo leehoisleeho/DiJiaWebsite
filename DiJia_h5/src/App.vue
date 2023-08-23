@@ -1,13 +1,4 @@
-<script setup>
-  import index from './pages/index.vue'
-</script>
-
 <template>
-  <div>
-    <index />
-  </div>
+  <router-view />
 </template>
 
-<style scoped>
-
-</style>
