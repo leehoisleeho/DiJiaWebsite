@@ -43,11 +43,11 @@
       <div class="newsBoxFoot">查看更多</div>
     </div>
     <!-- 关于我们 -->
-    <div class="about" @click="toAbout">
+    <div class="about">
       <div class="newsBoxTitle">
         关于我们
       </div>
-      <div class="aboutImg">
+      <div class="aboutImg"  @click="toAbout">
         <img src="../../public/imgs/about.png" alt="">
       </div>
     </div>
@@ -57,9 +57,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const route = useRoute();
 const router = useRouter();
 
 // 通过判断Touchstart和Touchendh滑动的距离 判断是点击事件 还是滑动事件
