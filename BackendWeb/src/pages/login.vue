@@ -5,9 +5,6 @@
 <template>
   <div class="container">
     <div class="loginBox">
-      <!-- <div>
-        <img src="../assets/imgs/backendLogin.png" alt="">
-      </div> -->
       <div>
         <div class="loginBox_itme">
           <img src="../assets/imgs/loginImg.png" alt="">
@@ -41,6 +38,8 @@
 .t-button {
   width: 100%;
   margin-top: 20px;
+  padding: 20px 0;
+  font-size: 16px;
 }
 
 .loginBox_itme>img {

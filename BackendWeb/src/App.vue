@@ -1,9 +1,9 @@
 <script setup>
-  import login from './pages/login.vue'
+  import index from './pages/index.vue'
 </script>
 
 <template>
- <login/>
+ <index/>
 </template>
 
 <style scoped>
