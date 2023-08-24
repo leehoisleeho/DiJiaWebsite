@@ -1,4 +1,23 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
+// 定义路由
+const router = useRouter();
+/**
+ * 描述: 侧边栏切换
+ * 加载首页时,默认选中第一个菜单 仪表盘
+ * onChange 测边拦切换事件
+ */
+const index = ref(0)
+const onChange = (e) => {
+  index.value = e
+}
+onMounted(() => {
+  // 加载首页时,默认选中第一个菜单 仪表盘
+  router.push('/dashboard')
+});
+
+</script>
 
 <template>
   <div class="container">
@@ -9,26 +28,26 @@
         <h1>后台管理系统</h1>
       </div>
       <div>
-        <t-menu>
-          <t-menu-item value="0">
+        <t-menu @change="onChange" :value=index>
+          <t-menu-item :value=0 to="/dashboard">
             仪表盘
           </t-menu-item>
-          <t-menu-item value="1">
+          <t-menu-item :value=1 to="/banner">
             轮播图
           </t-menu-item>
-          <t-menu-item value="2">
+          <t-menu-item :value=2 to="/projectList">
             金刚区
           </t-menu-item>
-          <t-menu-item value="3">
+          <t-menu-item :value=3 to="/article">
             文章
           </t-menu-item>
-          <t-menu-item value="4">
+          <t-menu-item :value=4 to="/about">
             关于我们
           </t-menu-item>
         </t-menu>
       </div>
       <div class="foot">
-       Copyright © 2020 - 2023 迪迦文化传媒公司版权所有
+        Copyright © 2020 - 2023 迪迦文化传媒公司版权所有
       </div>
     </div>
     <!-- 主要内容 -->
@@ -41,16 +60,17 @@
 </template>
 
 <style scoped>
-.main{
+.main {
   width: 100%;
   height: 100%;
   background-color: #fff;
 }
-.mainbox{
+
+.mainbox {
   width: 100%;
-  padding: 10px 20px;
 }
-.foot{
+
+.foot {
   color: #999;
   font-size: 12px;
   text-align: center;
@@ -59,6 +79,7 @@
   width: 232px;
   padding: 0 20px;
 }
+
 .sidebarHeader>h1 {
   font-size: 18px;
   color: #666;
@@ -85,5 +106,4 @@
   min-width: 1200px;
   height: 100vh;
   display: flex;
-}
-</style>
+}</style>
