@@ -2,6 +2,7 @@
 
 <template>
   <div class="container">
+    <!-- 侧边栏 -->
     <div class="sidebarBox">
       <div class="sidebarHeader">
         <img src="../assets/imgs/logo_1.png" alt="">
@@ -30,13 +31,25 @@
        Copyright © 2020 - 2023 迪迦文化传媒公司版权所有
       </div>
     </div>
-    <div class="main">
-      内容
+    <!-- 主要内容 -->
+    <div class="mainbox">
+      <div class="main">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.main{
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+.mainbox{
+  width: 100%;
+  padding: 10px 20px;
+}
 .foot{
   color: #999;
   font-size: 12px;
