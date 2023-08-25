@@ -17,46 +17,20 @@ const imgs = ref('');
 const onConfirm = async () => {
   if (isEdit.value) {
     if (file.value === '') {
-      api.editArticle({
-        id: article_id.value,
-        title: title.value,
-        imgs: imgs.value,
-        content: editorstore.val,
-      }).then(res => {
-        getArticleList();
-        editorstore.setVal('')
-        visible.value = false;
-      })
+      updataArticle();
     } else {
       const res = await api.upload({
         file: file.value,
       })
       imgs.value = res.data.url;
-      api.editArticle({
-        id: article_id.value,
-        title: title.value,
-        imgs: imgs.value,
-        content: editorstore.val,
-      }).then(res => {
-        getArticleList();
-        editorstore.setVal('')
-        visible.value = false;
-      })
+      updataArticle();
     }
   } else {
     const res = await api.upload({
       file: file.value,
     })
     imgs.value = res.data.url;
-    api.addArticle({
-      title: title.value,
-      imgs: imgs.value,
-      content: editorstore.val,
-    }).then(res => {
-      getArticleList();
-      editorstore.setVal('')
-      visible.value = false;
-    })
+    addArticle()
   }
 };
 /**
@@ -68,6 +42,10 @@ const getArticleList = () => {
     temUrl.value = '';
     articleList.value.forEach(element => {
       element.createtime = element.createtime.split('T')[0];
+      element.disabled = false;
+      if(element.title === '关于我们'){
+        element.disabled = true;
+      }
     });
   })
 }
@@ -95,7 +73,17 @@ const handleChange = () => {
   const temporaryURL = URL.createObjectURL(inputfile.files[0]);
   temUrl.value = temporaryURL;
 }
-
+const addArticle = () => {
+  api.addArticle({
+    title: title.value,
+    imgs: imgs.value,
+    content: editorstore.val,
+  }).then(res => {
+    getArticleList();
+    editorstore.setVal('')
+    visible.value = false;
+  })
+}
 //加载页面时候 获取文章列表
 const articleList = ref([]);
 onMounted(() => {
@@ -106,12 +94,7 @@ const deleteArticle = id => {
   api.deleteArticle({
     id,
   }).then(res => {
-    api.getArticleList().then(res => {
-      articleList.value = res.data;
-      articleList.value.forEach(element => {
-        element.createtime = element.createtime.split('T')[0];
-      });
-    })
+    getArticleList();
   })
 }
 // 编辑文章
@@ -129,6 +112,19 @@ const editArticle = id => {
       editorstore.setVal(res.data.content)
       visible.value = true
     })
+}
+// 上传文章更新数据
+const updataArticle = () => {
+  api.editArticle({
+    id: article_id.value,
+    title: title.value,
+    imgs: imgs.value,
+    content: editorstore.val,
+  }).then(res => {
+    getArticleList();
+    editorstore.setVal('')
+    visible.value = false;
+  })
 }
 </script>
 
@@ -178,7 +174,7 @@ const editArticle = id => {
           <li>{{ item.createtime }}</li>
           <li>
             <t-button theme="primary" style="margin-right: 20px" @click="editArticle(item.id)">编辑</t-button>
-            <t-button theme="danger" @click="deleteArticle(item.id)">删除</t-button>
+            <t-button theme="danger" @click="deleteArticle(item.id)" :disabled = "item.disabled">删除</t-button>
           </li>
         </ul>
       </div>

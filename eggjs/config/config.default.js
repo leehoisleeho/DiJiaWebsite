@@ -23,7 +23,7 @@ module.exports = (appInfo) => {
   // 自定义配置
   const userConfig = {};
   // 配置中间件
-  // config.middleware = [ 'auth' ];
+  config.middleware = [];
   // 配置mysql
   userConfig.mysql = {
     client: {

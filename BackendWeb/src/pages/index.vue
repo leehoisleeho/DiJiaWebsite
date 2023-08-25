@@ -41,9 +41,9 @@ onMounted(() => {
           <t-menu-item :value=3 to="/article">
             文章
           </t-menu-item>
-          <t-menu-item :value=4 to="/about">
+          <!-- <t-menu-item :value=4 to="/about">
             关于我们
-          </t-menu-item>
+          </t-menu-item> -->
         </t-menu>
       </div>
       <div class="foot">
