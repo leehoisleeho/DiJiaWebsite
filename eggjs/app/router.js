@@ -8,4 +8,5 @@ module.exports = app => {
   router.post('/api/addArticle', controller.article.add); // 添加文章接口的路由
   router.get('/api/getArticle', controller.article.get); // 获取文章接口的路由
   router.delete('/api/delArticle', controller.article.del); // 删除文章接口的路由
+  router.post('/api/updataImg', controller.updataImg.index); // 上传图片接口的路由
 };
