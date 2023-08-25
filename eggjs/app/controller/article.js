@@ -28,7 +28,6 @@ class addArticleController extends Controller {
   async get() {
     const { ctx } = this;
     const { id } = ctx.query;
-    console.log(id)
     const result = await ctx.service.getArticle.index({
       id
     });
@@ -68,6 +67,28 @@ class addArticleController extends Controller {
       ctx.body = {
         code: 1,
         msg: "删除失败"
+      };
+    }
+  }
+  // 编辑文章
+  async edit() {
+    const { ctx } = this;
+    const { id,title, content, imgs } = ctx.request.body;
+    const result = await ctx.service.editAritcle.index({
+      id,
+      title,
+      content,
+      imgs
+    });
+    if (result) {
+      ctx.body = {
+        code: 0,
+        msg: "编辑成功"
+      };
+    }else{
+      ctx.body = {
+        code: 1,
+        msg: "编辑失败"
       };
     }
   }

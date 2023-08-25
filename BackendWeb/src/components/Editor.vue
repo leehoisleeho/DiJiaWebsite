@@ -1,16 +1,25 @@
 <script setup>
-import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted, watch, defineEmits } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { editorStore } from '../../store/index.js'
+
+const props = defineProps({
+  editor: {
+    type: String
+  }
+})
+
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef()
 
 // 内容 HTML
-const valueHtml = ref('')
+const editorstor = editorStore()
+const valueHtml = ref(editorstor.val)
 
-// 模拟 ajax 异步获取内容
-onMounted(() => {
-
+// 监听内容变化
+watch(valueHtml, (val) => {
+  editorstor.setVal(val)
 })
 
 // 编辑器配置
@@ -34,9 +43,9 @@ onBeforeUnmount(() => {
 <template>
   <div style="border: 1px solid #ccc">
     <!-- 工具栏 -->
-    <Toolbar :editor="editorRef"  style="border-bottom: 1px solid #ccc" />
+    <Toolbar :editor="editorRef" style="border-bottom: 1px solid #ccc" />
     <!-- 编辑器 -->
-    <Editor v-model="valueHtml" :defaultConfig="editorConfig" style="height: 500px; overflow-y: hidden;"
+    <Editor v-model="valueHtml" :defaultConfig="editorConfig" style="height: 600px; overflow-y: hidden;"
       @onCreated="handleCreated" />
   </div>
 </template>

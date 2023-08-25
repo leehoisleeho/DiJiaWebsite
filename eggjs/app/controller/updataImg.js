@@ -2,7 +2,6 @@
 const path = require("path");
 const fs = require("fs");
 const { Controller } = require("egg");
-const { sendToWormhole, awaitWriteStream } = require("streaming-iterables");
 
 class UpdataImgController extends Controller {
   async index() {

@@ -1,17 +1,134 @@
 <script setup>
-import { ref } from 'vue'
-import Editor from '../components/Editor.vue';
+import { onMounted, ref } from "vue";
+import { NButton } from "naive-ui";
+import api from "../../API/api.js";
+import { editorStore } from '../../store/index.js'
+const editorstore = editorStore()
+const BaseUrl = 'http://127.0.0.1:7001'
 /**
  * 抽屉组件
  */
-const visible = ref(false)
+const visible = ref(false);
 const drawerShow = () => {
-  console.log('show')
-  visible.value = true
+  visible.value = true;
+};
+// 储存上传成功后的 图片地址
+const imgs = ref('');
+const onConfirm = async () => {
+  if (isEdit.value) {
+    if (file.value === '') {
+      api.editArticle({
+        id: article_id.value,
+        title: title.value,
+        imgs: imgs.value,
+        content: editorstore.val,
+      }).then(res => {
+        getArticleList();
+        editorstore.setVal('')
+        visible.value = false;
+      })
+    } else {
+      const res = await api.upload({
+        file: file.value,
+      })
+      imgs.value = res.data.url;
+      api.editArticle({
+        id: article_id.value,
+        title: title.value,
+        imgs: imgs.value,
+        content: editorstore.val,
+      }).then(res => {
+        getArticleList();
+        editorstore.setVal('')
+        visible.value = false;
+      })
+    }
+  } else {
+    const res = await api.upload({
+      file: file.value,
+    })
+    imgs.value = res.data.url;
+    api.addArticle({
+      title: title.value,
+      imgs: imgs.value,
+      content: editorstore.val,
+    }).then(res => {
+      getArticleList();
+      editorstore.setVal('')
+      visible.value = false;
+    })
+  }
+};
+/**
+ * 获取文章列表
+ */
+const getArticleList = () => {
+  api.getArticleList().then(res => {
+    articleList.value = res.data;
+    temUrl.value = '';
+    articleList.value.forEach(element => {
+      element.createtime = element.createtime.split('T')[0];
+    });
+  })
 }
-const onConfirm = () => {
-  console.log('confirm')
-  visible.value = false
+
+/**
+ * 新增文章
+ * temUrl 临时图片地址
+ * updata 上传文件 选择文件模拟点击input
+ * handleChange 上传文件改变
+ * editor组件实例子
+ */
+const temUrl = ref('');
+const file = ref('');
+const title = ref('');
+// 上传图片
+const updata = () => {
+  const inputfile = document.getElementById('inputfile');
+  inputfile.click();
+  inputfile.addEventListener('change', handleChange)
+}
+const handleChange = () => {
+  const inputfile = document.getElementById('inputfile');
+  file.value = inputfile.files
+  // 临时图片地址
+  const temporaryURL = URL.createObjectURL(inputfile.files[0]);
+  temUrl.value = temporaryURL;
+}
+
+//加载页面时候 获取文章列表
+const articleList = ref([]);
+onMounted(() => {
+  getArticleList();
+})
+// 删除文章
+const deleteArticle = id => {
+  api.deleteArticle({
+    id,
+  }).then(res => {
+    api.getArticleList().then(res => {
+      articleList.value = res.data;
+      articleList.value.forEach(element => {
+        element.createtime = element.createtime.split('T')[0];
+      });
+    })
+  })
+}
+// 编辑文章
+const isEdit = ref(false);
+const article_id = ref(0);
+const editArticle = id => {
+  isEdit.value = true;
+  article_id.value = id;
+  // 获取到文章详情
+  api.getArticleList(id)
+    .then(res => {
+      title.value = res.data.title;
+      temUrl.value = BaseUrl + res.data.imgs;
+      imgs.value = res.data.imgs;
+      editorstore.setVal(res.data.content)
+      visible.value = true
+    })
 }
 </script>
 
@@ -19,15 +136,18 @@ const onConfirm = () => {
   <div class="container">
     <div>
       <t-drawer destroyOnClose header v-model:visible="visible" @confirm="onConfirm" size="800px">
-        <p style="color: #333;font-size: 20px;">添加录播图</p>
+        <p style="color: #333; font-size: 20px">新增文章</p>
         <div class="inputBox">
           <div class="inputTitle">标题</div>
-          <t-input clearable placeholder="请输入文字标题" />
+          <t-input clearable placeholder="请输入文字标题" v-model="title" />
         </div>
         <div class="inputBox">
           <div class="inputTitle">上传文件封面</div>
-          <t-upload action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
-            allowUploadDuplicateFile draggable />
+          <div class="updataBox">
+            <img :src="temUrl" alt="" v-show="temUrl !== ''">
+            <input type="file" name="" accept="image/*" id="inputfile" style="opacity:0; position: absolute;">
+            <n-button type="primary" @click="updata">选择封面</n-button>
+          </div>
         </div>
         <div class="inputBox">
           <div class="inputTitle">文章内容</div>
@@ -38,40 +158,51 @@ const onConfirm = () => {
     <div class="infoBox">
       <div class="listBox">
         <div class="add">
-          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow">
+          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow" />
         </div>
         <ul class="listBoxTitle">
           <li>ID</li>
           <li>文章名称</li>
           <li>文章封面</li>
-          <li>文章内容</li>
           <li>点赞数</li>
           <li>发布日期</li>
           <li>操作</li>
         </ul>
-        <ul class="listItem">
-          <li>1</li>
-          <li>这是一个文章的标题</li>
+        <ul class="listItem" v-for="item in articleList" :key="item.id">
+          <li>{{ item.id }}</li>
+          <li>{{ item.title }}</li>
           <li>
-            <img src="../assets/imgs/backendLogin.png" alt="">
+            <img :src="BaseUrl + item.imgs" alt="" />
           </li>
+          <li>{{ item.likes }}</li>
+          <li>{{ item.createtime }}</li>
           <li>
-            <t-link underline theme="success"> 查看内容 </t-link>
-          </li>
-          <li>23</li>
-          <li>2023-08-24</li>
-          <li>
-            <t-button theme="primary" style="margin-right: 20px;">编辑</t-button>
-            <t-button theme="danger">删除</t-button>
+            <t-button theme="primary" style="margin-right: 20px" @click="editArticle(item.id)">编辑</t-button>
+            <t-button theme="danger" @click="deleteArticle(item.id)">删除</t-button>
           </li>
         </ul>
-
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.updataBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.updataBox>.n-button {
+  width: 100px;
+}
+
+.updataBox>img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+}
+
 .inputTitle {
   margin-bottom: 10px;
   font-size: 18px;
@@ -96,7 +227,8 @@ const onConfirm = () => {
 }
 
 .listItem>li:nth-child(3)>img {
-  width: 15%;
+  width: 50px;
+  height: 50px;
 }
 
 .listItem>li {
