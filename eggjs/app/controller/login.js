@@ -1,6 +1,7 @@
 'use strict';
 
 const { Controller } = require('egg');
+const jwt = require('jsonwebtoken'); // 导入 jsonwebtoken 库
 
 class LoginController extends Controller {
   async index() {
@@ -14,10 +15,12 @@ class LoginController extends Controller {
         msg: '用户名或密码错误',
       };
     } else {
+      const { id } = res;
+      const token = jwt.sign({ userId: id }, 'your-secret-key', { expiresIn: '1h' }); // 生成 token
       ctx.body = {
         code: 0,
         msg: '登录成功',
-        data: res,
+        token,
       };
     }
   }

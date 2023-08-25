@@ -20,13 +20,10 @@ module.exports = appInfo => {
   };
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1692863708523_786';
-
-  // add your middleware config here
-  config.middleware = [];
-  // add your user config here
   // 自定义配置
   const userConfig = {};
-
+  // 配置中间件
+  // config.middleware = [ 'auth' ];
   // 配置mysql
   userConfig.mysql = {
     client: {
@@ -39,7 +36,11 @@ module.exports = appInfo => {
     app: true,
     agent: false,
   };
-
+  // 配置跨域
+  userConfig.cors = {
+    origin: '*',
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
+  };
   return {
     ...config,
     ...userConfig,

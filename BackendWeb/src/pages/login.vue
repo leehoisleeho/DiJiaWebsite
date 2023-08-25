@@ -1,5 +1,38 @@
 <script setup>
-
+import { ref } from 'vue';
+// 引入router
+import { useRouter } from 'vue-router';
+const router = useRouter();
+import api from '../../API/api.js';
+/**
+ * 登录
+ * @param {*} account 账号
+ * @param {*} password 密码
+ * @param {*} login 登录
+ * @param {*} token token
+ * @param {*} code 状态码 
+ * @param {*} res 返回的数据
+ * @param {*} sessionStorage 存储token
+ * @param {*} router 路由
+ */
+const account = ref('');
+const password = ref('');
+const login = () => {
+  api.login({
+    username: account.value,
+    password: password.value
+  }).then(res => {
+    let code = res.code;
+    let token = res.token;
+    // 把token存到sessionStorage
+    sessionStorage.setItem('token', token);
+    if (code === 0) {
+      router.push('/');
+    } else if (code === 1) {
+      
+    }
+  })
+}
 </script>
 
 <template>
@@ -10,9 +43,9 @@
           <img src="../assets/imgs/loginImg.png" alt="">
           <h3>登录 Login</h3>
           <div class="loginBox_itme_1">
-            <t-input type="text" placeholder="请输入账号" style="margin-bottom: 20px;"/>
-            <t-input type="password" placeholder="请输入密码" />
-            <t-button>登录</t-button>
+            <t-input type="text" placeholder="请输入账号" style="margin-bottom: 20px;" v-model="account" />
+            <t-input type="password" placeholder="请输入密码" v-model="password" />
+            <t-button @click="login">登录</t-button>
           </div>
         </div>
       </div>
@@ -21,13 +54,15 @@
 </template>
 
 <style scoped>
-.t-input{
+.t-input {
   margin-top: 30px !important;
 }
-.loginBox_itme_1{
+
+.loginBox_itme_1 {
   width: 300px;
   margin-top: 30px;
 }
+
 .loginBox_itme>h3 {
   margin-top: 20px;
   color: #585858;
@@ -94,5 +129,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-</style>
+}</style>
