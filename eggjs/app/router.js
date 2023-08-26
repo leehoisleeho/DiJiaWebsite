@@ -14,4 +14,8 @@ module.exports = app => {
   router.get('/api/getBanner', controller.banner.get); // 获取轮播图接口的路由
   router.delete('/api/delBanner', controller.banner.del); // 删除轮播图接口的路由
   router.post('/api/updataBanner', controller.banner.edit); // 更新轮播图接口的路由
+  router.post('/api/addProject', controller.project.add); // 添加项目接口的路由
+  router.post('/api/delProject', controller.project.del); // 删除项目接口的路由
+  router.get('/api/getProject', controller.project.get); // 获取项目接口的路由
+  router.post('/api/updataProject', controller.project.edit); // 更新项目接口的路由
 };

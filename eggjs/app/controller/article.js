@@ -1,5 +1,6 @@
 "use strict";
 
+
 const { Controller } = require("egg");
 
 class addArticleController extends Controller {
