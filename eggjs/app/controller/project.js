@@ -72,5 +72,4 @@ class ProjectController extends Controller {
     }
   }
 }
-
 module.exports = ProjectController;

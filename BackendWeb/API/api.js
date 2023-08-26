@@ -81,5 +81,28 @@ export default {
       method: "post",
       data,
     });
+  },
+  // 添加项目
+  addProject: (data) => {
+    return service({
+      url: "/api/addProject",
+      method: "post",
+      data,
+    });
+  },
+  // 获取项目列表
+  getProjectList: (id='') => { 
+    return service({
+      url: "/api/getProject?id=" + id,
+      method: "get",
+    });
+  },
+  // 删除项目
+  deleteProject: (id) => {
+    return service({
+      url: "/api/delProject",
+      method: "post",
+      id,
+    });
   }
 };
