@@ -1,24 +1,195 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import api from '../../API/api'
+import { NButton, NSelect } from 'naive-ui'
+
+const BaseUrl = 'http://127.0.0.1:7001'
+
+onMounted(() => {
+  getBannerList()
+})
+// 获取banner列表
+let bannerList = ref([])
+const getBannerList = () => {
+  api.getBanner().then(res => {
+    bannerList.value = res.data
+  })
+}
 /**
  * 抽屉组件
+ * drawerShow 打开
+ * onConfirm 确认
+ * onCancle 取消
  */
 const visible = ref(false)
 const drawerShow = () => {
-  console.log('show')
+  isEdit.value = false
   visible.value = true
+  article_id.value = null
+  article_title.value = null
+  tempUrl.value = null
+  file.value = ''
 }
-const onConfirm = () => {
-  console.log('confirm')
+const img = ref(null)
+const onConfirm = async () => {
+  if (isEdit.value) {
+    console.log('edit')
+    if (file.value === '') {
+      editBanner()
+    } else {
+      img.value = await uploadImg()
+      try {
+        editBanner()
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    return
+  }
+  img.value = await uploadImg()
+  try {
+    addBanner()
+  } catch (error) {
+    console.log(error)
+  }
+}
+const onCancle = () => {
+  console.log('cancel')
   visible.value = false
+}
+/**
+ * 文章选择器
+ */
+const value = ref()
+const options = ref([])
+const article_id = ref(Number)
+const article_title = ref(String)
+
+// 选择后的回调
+const selected = (e, option) => {
+  article_id.value = Number(option.value)
+  article_title.value = option.label
+  value.value = option.value
+}
+// 打开选择器
+const openSelect = () => {
+  if (isEdit.value) {
+    console.log(value.value)
+    api.getArticleList().then(res => {
+      console.log(res.data)
+      options.value = res.data.map(item => {
+        console.log(item.title)
+        if (item.title === value.value) {
+          return {
+            label: item.title,
+            value: item.id,
+            disabled: true
+          }
+        }
+        return {
+          label: item.title,
+          value: item.id
+        }
+      })
+    })
+  } else {
+    api.getArticleList().then(res => {
+      options.value = res.data.map(item => {
+        return {
+          label: item.title,
+          value: item.id
+        }
+      })
+    })
+  }
+}
+/**
+ * 上传图片
+ */
+const tempUrl = ref(null)
+const file = ref('');
+const uploadImgBtn = () => {
+  document.getElementById('inputFile').click()
+  inputFile.addEventListener('change', handleChange)
+}
+const handleChange = () => {
+  const inputFile = document.getElementById('inputFile');
+  file.value = inputFile.files
+  // 临时图片地址
+  const temporaryURL = URL.createObjectURL(inputFile.files[0]);
+  tempUrl.value = temporaryURL;
+}
+
+const uploadImg = () => {
+  return api.upload(file.value).then(res => {
+    return res.data.url
+  })
+}
+/**
+ * Banner
+ */
+const addBanner = () => {
+  api.addBanner({
+    article_id: article_id.value,
+    img: img.value,
+    article_title: article_title.value
+  }).then(res => {
+    visible.value = false
+    getBannerList()
+  })
+}
+const delBanner = (id) => {
+  api.deleteBanner({
+    id: id
+  }).then(res => {
+    getBannerList()
+  })
+}
+const isEdit = ref(false);
+const banner_id = ref(0)
+const editBannerBtn = (id) => {
+  isEdit.value = true
+  banner_id.value = id
+  api.getBanner(id).then(res => {
+    visible.value = true
+    tempUrl.value = BaseUrl + res.data.img
+    img.value = res.data.img
+    value.value = res.data.article_title
+    article_id.value = res.data.article_id
+    article_title.value = res.data.article_title
+  })
+}
+// 编辑banner
+const editBanner = () => {
+  api.editBanner({
+    id: banner_id.value,
+    article_id: article_id.value,
+    img: img.value,
+    article_title: article_title.value
+  }).then(res => {
+    visible.value = false
+    getBannerList()
+  })
 }
 </script>
 
 <template>
   <div class="container">
     <div>
-      <t-drawer destroyOnClose header v-model:visible="visible" @confirm="onConfirm"  size="800px">
-        <p>添加录播图</p>
+      <t-drawer destroyOnClose header v-model:visible="visible" @confirm="onConfirm" @cancel="onCancle" size="800px">
+        <p class="drawerTitle">添加录播图</p>
+        <p class="drawerItemTitle">选择文章</p>
+        <n-select :options="options" placeholder="请选择文章" @focus="openSelect" @update:value="selected"
+          v-model:value="value" />
+        <p class="drawerItemTitle">上传图片</p>
+        <div class="imgBox">
+          <img :src="tempUrl" alt="" v-show="tempUrl !== null">
+          <div class="imgNone" v-show="tempUrl === null">
+            <img src="../assets/imgs/addImgIcon.png" alt="">
+          </div>
+          <input type="file" id="inputFile">
+          <n-button type="primary" @click="uploadImgBtn">上传封面</n-button>
+        </div>
       </t-drawer>
     </div>
     <div class="infoBox">
@@ -30,20 +201,21 @@ const onConfirm = () => {
           <li>背景图片</li>
           <li>操作</li>
         </ul>
-        <ul class="listItem">
-          <li>1</li>
-          <li>2</li>
-          <li>新闻01</li>
+        <ul class="listItem" v-for="item in bannerList" :key="item.id">
+          <li>{{ item.id }}</li>
+          <li>{{ item.article_id }}</li>
+          <li>{{ item.article_title }}</li>
           <li>
-            <img src="../assets/imgs/backendLogin.png" alt="">
+            <img :src="BaseUrl + item.img" alt="">
           </li>
           <li>
-            <t-button theme="primary" style="margin-right: 20px;">编辑</t-button>
-            <t-button theme="danger">删除</t-button>
+            <t-button theme="primary" style="margin-right: 20px;" @click="editBannerBtn(item.id)">编辑</t-button>
+            <t-button theme="danger" @click="delBanner(item.id)">删除</t-button>
           </li>
         </ul>
         <div class="add">
-          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow">
+          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow" v-show="bannerList.length < 4">
+          <img src="../assets/imgs/addIcon.png" style="opacity: 0.3;" alt="" v-show="bannerList.length >= 4">
         </div>
       </div>
     </div>
@@ -51,9 +223,54 @@ const onConfirm = () => {
 </template>
 
 <style scoped>
-.t-drawer{
+#inputFile {
+  position: absolute;
+  opacity: 0;
+}
+
+.imgNone>img {
+  width: 50px;
+  height: 50px;
+}
+
+.imgNone {
+  width: 100%;
+  height: 350px;
+  border: 1px solid rgb(233, 233, 233);
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.imgBox {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.imgBox>img {
+  width: 100%;
+  height: 350px;
+  margin-bottom: 20px;
+}
+
+.drawerItemTitle {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  font-size: 15px;
+}
+
+.drawerTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.t-drawer {
   width: 1000px;
 }
+
 .add>img {
   width: 30px;
   height: 30px;
@@ -67,7 +284,8 @@ const onConfirm = () => {
 }
 
 .listItem>li:nth-child(4)>img {
-  width: 15%;
+  width: 100px;
+  height: 60px;
 }
 
 .listItem>li {

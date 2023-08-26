@@ -13,4 +13,5 @@ module.exports = app => {
   router.post('/api/addBanner', controller.banner.add); // 添加轮播图接口的路由
   router.get('/api/getBanner', controller.banner.get); // 获取轮播图接口的路由
   router.delete('/api/delBanner', controller.banner.del); // 删除轮播图接口的路由
+  router.post('/api/updataBanner', controller.banner.edit); // 更新轮播图接口的路由
 };

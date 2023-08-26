@@ -59,6 +59,28 @@ class BannerController extends Controller {
       };
     }
   }
+  // 修改轮播图
+  async edit() {
+    const { ctx, service } = this;
+    const { id, article_id, img, article_title } = ctx.request.body;
+    const result = await service.editBanner.index({
+      id,
+      article_id,
+      img,
+      article_title,
+    });
+    if (result) {
+      ctx.body = {
+        code: 200,
+        msg: "修改成功",
+      };
+    } else {
+      ctx.body = {
+        code: 500,
+        msg: "修改失败",
+      };
+    }
+  }
 }
 
 module.exports = BannerController;

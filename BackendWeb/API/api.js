@@ -50,5 +50,36 @@ export default {
       method: "post",
       data,
     });
+  },
+  // 上传banner
+  addBanner: (data) => {
+    return service({
+      url: "/api/addBanner",
+      method: "post",
+      data,
+    });
+  },
+  // 获取banner
+  getBanner: (id='') => {
+    return service({
+      url: "/api/getBanner?id=" + id,
+      method: "get",
+    });
+  },
+  // 删除banner
+  deleteBanner: (data) => {
+    return service({
+      url: "/api/delBanner",
+      method: "DELETE",
+      data: data,
+    });
+  },
+  // 更新banner
+  editBanner: (data) => {
+    return service({
+      url: "/api/updataBanner",
+      method: "post",
+      data,
+    });
   }
 };
