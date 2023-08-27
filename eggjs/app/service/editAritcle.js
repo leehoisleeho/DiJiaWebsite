@@ -8,6 +8,7 @@ class editArticleService extends Service {
       title: data.title,
       content: data.content,
       imgs: data.imgs,
+      likes: data.likes,
     }
     const result = await this.app.mysql.update('article', row); // 更新 posts 表中的记录
     return result;

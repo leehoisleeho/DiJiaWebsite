@@ -1,38 +1,44 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { get } from '../../API/service';
+const BaseUrl = 'http://127.0.0.1:7001'
+const data = ref('')
+const route = useRoute();
+const imgList = ref([])
+onMounted(() => {
+  const id = route.query.id
+  get('/h5/api/getProject?id=' + id).then(res => {
+    console.log(res)
+    data.value = res.data
+    imgList.value = res.data.project_imgs.split(',')
+  })
+})
+</script>
 <template>
   <div class="header"></div>
   <div class="infoBox">
     <div class="infoTitle">
-      <img src="../../public/imgs/miniProgram.png" alt="">
-      <span>微信小程序开发</span>
+      <img :src="BaseUrl + data.icon_img" alt="">
+      <span>{{ data.name }}</span>
     </div>
     <div class="infoBoxList">
-      <div class="infoBoxListItem">
-        这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述
-        这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述
-        这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述
-        这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述这是一段微信小程序介绍的描述
+      <div class="infoBoxListItem Introduction">
+        {{data.Introduction}}
       </div>
     </div>
   </div>
   <div class="infoBoxList_1">
-      <h3>我们能做什么？</h3>
-      <div class="infoBoxListItem">
-        1. 根据客户需求，进行小程序的开发<br/>
-        2. 根据客户需求，进行小程序的开发<br/>
-        3. 根据客户需求，进行小程序的开发<br/>
-        4. 根据客户需求，进行小程序的开发<br/>
-        5. 根据客户需求，进行小程序的开发<br/>
-      </div>
+    <h3>我们能做什么？</h3>
+    <div class="infoBoxListItem">
+      {{data.we_do}}
+    </div>
   </div>
   <div class="infoBoxList_1">
-      <h3>案例图片</h3>
-      <div class="infoBoxListItem">
-        <img src="../../public/imgs/miniProgram.png" alt="">
-        <img src="../../public/imgs/miniProgram.png" alt="">
-        <img src="../../public/imgs/miniProgram.png" alt="">
-        <img src="../../public/imgs/miniProgram.png" alt="">
-      </div>
+    <h3>案例图片</h3>
+    <div class="infoBoxListItem">
+      <img :src="BaseUrl + item" v-for="item in imgList">
+    </div>
   </div>
   <div class="btnBox">
     <t-button size="large" theme="primary" block>联系我们</t-button>
@@ -40,36 +46,51 @@
 </template>
 
 <style scoped>
-.infoBoxListItem{
+.Introduction{
+  height: 300px;
+}
+.infoBoxListItem {
   display: flex;
-  justify-content: space-between;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  /* 滚动条  */
+  overflow-x: auto;
 }
-.infoBoxListItem>img{
-  width: 20%;
+
+.infoBoxListItem>img {
+  width: 200px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
-.t-button{
+
+.t-button {
   padding: 50px 0;
   font-size: 30px;
-  
+
 }
-.btnBox{
+
+.btnBox {
   width: 700px;
   margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 100px;
 }
-.infoBoxList_1>.infoBoxListItem{
+
+.infoBoxList_1>.infoBoxListItem {
   color: #333;
 }
-.infoBoxList_1>h3{
+
+.infoBoxList_1>h3 {
   padding: 0 30px;
   margin-bottom: 20px;
   color: #333;
 }
-.infoBoxList_1{
+
+.infoBoxList_1 {
   margin-top: 50px;
 }
+
 .infoBoxListItem {
   padding: 0 30px;
   color: #666;

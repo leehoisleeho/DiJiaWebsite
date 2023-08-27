@@ -1,15 +1,20 @@
-<script setup></script>
+<script setup>
+  import { onMounted, ref } from 'vue'
+  import { get } from '../../API/service'
+  const content = ref('')
+  onMounted(() => {
+    get('/h5/api/getArticle?id=42').then(res=>{
+      content.value = res.data.content
+    })
+  })
+</script>
 <template>
   <div class="header">
     <img src="../../public/imgs/about.png" alt="">
   </div>
   <div class="info">
     <h2>我们是谁 / 我们奉行的理念</h2>
-    <div class="info_1">
-      Recreate games 是 Source Technology 旗下游戏工作室，目标是创造下一代沉浸体验的娱乐产品。成员来自 EA、Smartisan、腾讯、百度等游戏与互联网公司。公司由 Matrix Partners、Bertelsmann、Zhen Fund 等基金投资。
-      Recreate games 是 Source Technology 旗下游戏工作室，目标是创造下一代沉浸体验的娱乐产品。成员来自 EA、Smartisan、腾讯、百度等游戏与互联网公司。公司由 Matrix Partners、Bertelsmann、Zhen Fund 等基金投资。
-      Recreate games 是 Source Technology 旗下游戏工作室，目标是创造下一代沉浸体验的娱乐产品。成员来自 EA、Smartisan、腾讯、百度等游戏与互联网公司。公司由 Matrix Partners、Bertelsmann、Zhen Fund 等基金投资。
-    </div>
+    <div class="info_1" v-html="content"></div>
   </div>
 </template>
 <style scoped>

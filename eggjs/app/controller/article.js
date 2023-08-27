@@ -74,12 +74,13 @@ class addArticleController extends Controller {
   // 编辑文章
   async edit() {
     const { ctx } = this;
-    const { id,title, content, imgs } = ctx.request.body;
+    const { id,title, content, imgs,likes } = ctx.request.body;
     const result = await ctx.service.editAritcle.index({
       id,
       title,
       content,
-      imgs
+      imgs,
+      likes,
     });
     if (result) {
       ctx.body = {

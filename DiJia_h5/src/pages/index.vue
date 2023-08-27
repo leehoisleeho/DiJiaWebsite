@@ -1,65 +1,30 @@
-<template>
-  <div class="container">
-    <!-- 轮播图 -->
-    <div class="header">
-      <div style="padding: 0 10px" >
-        <t-swiper :navigation="{ type: 'dots-bar' }" >
-          <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px" 
-          @touchstart="handleTouchstart"
-          @touchend="handleTouchend(index)"
-          @touchmove="handleTouchmove"
-          >
-            <img :src="item" />
-          </t-swiper-item>
-        </t-swiper>
-      </div>
-    </div>
-    <!-- 金刚区 -->
-    <div class="navBox">
-      <ul class="navBox_item">
-        <li v-for="{ item, index } in 7" @click="toProjectDetails">
-          <img src="../../public/imgs/douyin.png" alt="">
-          <span>抖音拍摄</span>
-        </li>
-      </ul>
-    </div>
-    <!-- 新闻列表 -->
-    <div class="newsBox">
-      <div class="newsBoxTitle">
-        新闻专区
-      </div>
-      <ul class="newsBoxList">
-        <li @click="toNewsDetails">
-          <div class="newsBoxListImg">
-            <img src="../../public/imgs/newsImg.png" alt="">
-          </div>
-          <div class="newsListInfo">
-            <div>这是一个新闻的标题</div>
-            <div>2023-08-23</div>
-            <div>这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容,这是这篇新闻的概要，大概的讲一下新闻的内容</div>
-          </div>
-        </li>
-      </ul>
-      <div class="newsBoxFoot">查看更多</div>
-    </div>
-    <!-- 关于我们 -->
-    <div class="about">
-      <div class="newsBoxTitle">
-        关于我们
-      </div>
-      <div class="aboutImg"  @click="toAbout">
-        <img src="../../public/imgs/about.png" alt="">
-      </div>
-    </div>
-    <!-- 底部 -->
-    <t-footer text="Copyright © 2020-2023 迪迦文化传媒公司" />
-  </div>
-</template>
-
 <script setup>
+import { onMounted ,ref} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+const BaseUrl = "http://127.0.0.1:7001"
 const router = useRouter();
+import { get } from "../../API/service";
 
+onMounted(() => {
+  pageData()
+});
+// 获取页面所属数据
+const bannerList = ref([]);
+const articleList = ref([]);
+const projectList = ref([]);
+const pageData = async ()=>{
+  const dataList = await Promise.all([get('/h5/api/getArticle'),get('/h5/api/getProject'),get('/h5/api/getBanner')])
+  bannerList.value = dataList[2].data
+  articleList.value = dataList[0].data
+  projectList.value = dataList[1].data
+  swiperList.value = bannerList.value.map((item,index)=>{
+    return {
+      article_id:item.article_id,
+      img:item.img,      
+    }
+  })
+  
+}
 // 通过判断Touchstart和Touchendh滑动的距离 判断是点击事件 还是滑动事件
 /**
  * 腾讯轮播组件有问题 无法触发点击事件
@@ -94,26 +59,35 @@ const handleTouchmove = (e) => {
 const handleTouchend = (index) => {
   if (isClick) {
     // 点击时候处理的逻辑写这里
-    console.log('点击事件',index)
+    // console.log('点击事件', index)
+    router.push({
+    path: '/newsDetails',
+    query: {
+      id: index
+    }
+  })
   }
   isClick = true;
 }
-
-
-const swiperList = [
-  "../../public/imgs/封面1.jpg",
-  "../../public/imgs/封面2.jpg"
-];
-
+const swiperList = ref([])
 //金刚区图片被点击
 const toProjectDetails = (e) => {
-  console.log(e);
-  router.push('/projectDetais');
+  router.push({
+    path: '/projectDetais',
+    query: {
+      id: e
+    }
+  })
 }
 
 // 去文章详情页
-const toNewsDetails = () => {
-  router.push('/newsDetails');
+const toNewsDetails = (id) => {
+  router.push({
+    path: '/newsDetails',
+    query: {
+      id: id
+    }
+  })
 }
 
 // 去关于我们
@@ -121,6 +95,65 @@ const toAbout = () => {
   router.push('/about');
 }
 </script>
+
+<template>
+  <div class="container">
+    <!-- 轮播图 -->
+    <div class="header">
+      <div style="padding: 0 10px">
+        <t-swiper :navigation="{ type: 'dots-bar' }">
+          <t-swiper-item v-for="(item, index) in swiperList" :key="index" style="height: 192px"
+            @touchstart="handleTouchstart" 
+            @touchend="handleTouchend(item.article_id)" 
+            @touchmove="handleTouchmove" 
+            autoplay="false">
+            <img :src="BaseUrl + item.img" />
+          </t-swiper-item>
+        </t-swiper>
+      </div>
+    </div>
+    <!-- 金刚区 -->
+    <div class="navBox">
+      <ul class="navBox_item">
+        <li v-for="(item,index) in projectList" :key="item.id"  @click="toProjectDetails(item.id)">
+          <img :src="BaseUrl + item.icon_img" alt="">
+          <span>{{item.name}}</span>
+        </li>
+      </ul>
+    </div>
+    <!-- 新闻列表 -->
+    <div class="newsBox">
+      <div class="newsBoxTitle">
+        新闻专区
+      </div>
+      <ul class="newsBoxList" v-for="(item,index) in articleList" :key="item.id">
+        <li @click="toNewsDetails(item.id)">
+          <div class="newsBoxListImg">
+            <img :src="BaseUrl + item.imgs" alt="">
+          </div>
+          <div class="newsListInfo">
+            <div>{{item.title}}</div>
+            <div>浏览量 {{item.likes}}</div>
+            <div>{{item.createtime.split('T')[0]}}</div>
+            <!-- <div v-html="item.content"></div> -->
+          </div>
+        </li>
+      </ul>
+      <div class="newsBoxFoot" style="font-size: 13px;">查看更多</div>
+    </div>
+    <!-- 关于我们 -->
+    <div class="about">
+      <div class="newsBoxTitle">
+        关于我们
+      </div>
+      <div class="aboutImg" @click="toAbout">
+        <img src="../../public/imgs/about.png" alt="">
+      </div>
+    </div>
+    <!-- 底部 -->
+    <t-footer style="font-size: 13px;" text="Copyright © 2020-2023 迪迦文化传媒公司" />
+  </div>
+</template>
 
 <style scoped>
 .newsListInfo>div:nth-child(3) {
@@ -135,25 +168,32 @@ const toAbout = () => {
 }
 
 .newsListInfo>div:nth-child(2) {
-  font-size: 26px;
+  font-size: 20px;
   color: #999;
 }
-
+.newsListInfo{
+  height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 .newsBoxList>li {
   display: flex;
   align-items: center;
   padding: 0 30px;
-  height: 200px;
-  margin-bottom: 30px;
+  height: 180px;
+  margin-bottom: 14px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 10px;
 }
 
 .newsBoxListImg {
-  width: 300px;
   margin-right: 30px;
 }
-
+.newsBoxListImg> img{
+  width: 120px;
+  height: 120px;
+}
 .aboutImg {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   border-radius: 10px;
@@ -194,7 +234,13 @@ const toAbout = () => {
 .newsBox {
   padding: 0 30px;
 }
-
+.navBox_item>li>span{
+  /* 溢出省略号显示 */
+  overflow: hidden;
+  white-space: nowrap;
+  display: block;
+  width: 120px;
+}
 .navBox_item>li>img {
   width: 80px;
 }
