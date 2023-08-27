@@ -20,17 +20,20 @@ const project_imgs = ref('')
 // 打开抽屉
 const visible = ref(false)
 const showDrawer = () => {
+  isEdit.value = false
   visible.value = true
   // 打开抽屉时候初始化数据
   name.value = ''
   Introduction.value = ''
   we_do.value = ''
   icon_img.value = null
-  project_imgs.value = ''
+  project_imgs.value = null
+  projectImgList.value = []
 }
 // 确认抽屉
 const onConfirm = () => {
-  if (isEdit) {
+  if (isEdit.value) {
+    console.log('更新项目')
     editProject()
     return
   }
@@ -41,9 +44,8 @@ const onClose = () => {
   visible.value = false
 }
 const addProject = async () => {
-  icon_img.value = await uploadImg(file.value)
-  const list = await uploadProjectImg()
-  project_imgs.value = list.join(',')
+  console.log('添加项目')
+  project_imgs.value = projectImgList.value.join(',')
   try {
     api.addProject({
       name: name.value,
@@ -95,14 +97,21 @@ const handleChange = async () => {
 }
 
 // 上传project图片的方法
-const fileList = ref([]); // 上传的文件
 const updataProjectImg = () => {
   document.getElementById('projectImgs').click()
   projectImgs.addEventListener('change', handleChangeProjectImg)
 }
-const handleChangeProjectImg = () => {
-
+const projectImgList =ref([])
+const handleChangeProjectImg = async () => {
+  const projectImgs = document.getElementById('projectImgs');
+  let res = await uploadImg(projectImgs.files)
+  projectImgList.value.push(res)
 }
+// 删除图片
+const deleteImg = (index) => {
+  projectImgList.value.splice(index, 1)
+}
+
 // 删除项目
 const deleteProject = (id) => {
   console.log(id)
@@ -124,21 +133,25 @@ const editProjectBtn = (item) => {
   name.value = item.name
   Introduction.value = item.Introduction
   we_do.value = item.we_do
-  project_imgs.value = item.project_img
   icon_img.value = item.icon_img
+  projectImgList.value = item.project_imgs.split(',')
 }
 // 更新项目的方法
 const editProject = () => {
+  project_imgs.value = projectImgList.value.join(',')
   const data = {
     id: id.value,
     name: name.value,
     Introduction: Introduction.value,
     we_do: we_do.value,
-    project_img: project_imgs.value,
+    project_imgs: project_imgs.value,
     icon_img: icon_img.value
   }
   api.editProject(data).then(res => {
-    console.log(res)
+    api.getProjectList().then(res => {
+      projectList.value = res.data
+      visible.value = false
+    })
   })
 }
 </script>
@@ -165,8 +178,9 @@ const editProject = () => {
       <div class="projectImg">
         <input type="file" name="" id="projectImgs">
         <div class="projectImgBox">
-          <div class="projectImgBoxItem">
-            <img alt="">
+          <div class="projectImgBoxItem" v-for="(item,index) in projectImgList" :key="index" >
+            <img :src="BaseUrl + item" >
+            <img src="../assets/imgs/delete_fill.png" alt="" class="_delImgIcon" @click="deleteImg(index)">
           </div>
         </div>
         <n-button type="primary" @click=" updataProjectImg ">上传图片</n-button>
@@ -200,6 +214,7 @@ const editProject = () => {
 </template>
 
 <style scoped>
+
 #projectImgs {
   opacity: 0;
   position: absolute;
@@ -212,16 +227,31 @@ const editProject = () => {
 }
 
 .projectImgBoxItem>img {
-  width: 100%;
-  height: 100%;
+  width: 150px;
+  height: 150px;
+  
 }
 
 .projectImgBoxItem {
-  padding: 10px;
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-
+._delImgIcon{
+  width: 25px !important;
+  height: 25px !important;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  cursor: pointer;
+  box-shadow:none !important;
+}
 .textarea {
   height: 200px;
 }
