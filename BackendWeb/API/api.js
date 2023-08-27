@@ -104,5 +104,13 @@ export default {
       method: "post",
       id,
     });
-  }
+  },
+  // 更新项目
+  editProject: (data) => {
+    return service({
+      url: "/api/updataProject",
+      method: "post",
+      data,
+    });
+  },
 };

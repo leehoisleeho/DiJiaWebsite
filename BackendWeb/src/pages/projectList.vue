@@ -15,19 +15,31 @@ onMounted(() => {
 const name = ref('')
 const Introduction = ref('')
 const we_do = ref('')
-const icon_img = ref('')
+const icon_img = ref(null)
 const project_imgs = ref('')
-
 // 打开抽屉
 const visible = ref(false)
 const showDrawer = () => {
   visible.value = true
+  // 打开抽屉时候初始化数据
+  name.value = ''
+  Introduction.value = ''
+  we_do.value = ''
+  icon_img.value = null
+  project_imgs.value = ''
 }
 // 确认抽屉
-const onConfirm = async () => {
+const onConfirm = () => {
+  if (isEdit) {
+    editProject()
+    return
+  }
   addProject()
 }
-// 新增项目的方法
+// 关闭抽屉
+const onClose = () => {
+  visible.value = false
+}
 const addProject = async () => {
   icon_img.value = await uploadImg(file.value)
   const list = await uploadProjectImg()
@@ -72,33 +84,24 @@ const onCancle = () => {
   visible.value = false
 }
 // 上传icon图片的方法
-const tempUrl = ref(null)
-const file = ref(''); // 上传的文件
 const updataIcon = () => {
   document.getElementById('iconInput').click()
   iconInput.addEventListener('change', handleChange)
 }
-const handleChange = () => {
+const handleChange = async () => {
   const iconInput = document.getElementById('iconInput');
-  file.value = iconInput.files
-  // 临时图片地址
-  const temporaryURL = URL.createObjectURL(iconInput.files[0]);
-  tempUrl.value = temporaryURL;
+  console.log(iconInput.files)
+  icon_img.value = await uploadImg(iconInput.files)
 }
 
 // 上传project图片的方法
-const tempUrlList = ref([]) // 临时图片地址
 const fileList = ref([]); // 上传的文件
 const updataProjectImg = () => {
   document.getElementById('projectImgs').click()
   projectImgs.addEventListener('change', handleChangeProjectImg)
 }
 const handleChangeProjectImg = () => {
-  const projectImgs = document.getElementById('projectImgs');
-  fileList.value.push(projectImgs.files)
-  // 临时图片地址
-  const temporaryURL = URL.createObjectURL(projectImgs.files[0]);
-  tempUrlList.value.push(temporaryURL);
+
 }
 // 删除项目
 const deleteProject = (id) => {
@@ -110,7 +113,34 @@ const deleteProject = (id) => {
     })
   })
 }
-
+// 编辑项目
+const id = ref(null)
+const isEdit = ref(false)
+const editProjectBtn = (item) => {
+  visible.value = true
+  isEdit.value = true
+  // 点击编辑时,把item数据赋值给表单
+  id.value = item.id
+  name.value = item.name
+  Introduction.value = item.Introduction
+  we_do.value = item.we_do
+  project_imgs.value = item.project_img
+  icon_img.value = item.icon_img
+}
+// 更新项目的方法
+const editProject = () => {
+  const data = {
+    id: id.value,
+    name: name.value,
+    Introduction: Introduction.value,
+    we_do: we_do.value,
+    project_img: project_imgs.value,
+    icon_img: icon_img.value
+  }
+  api.editProject(data).then(res => {
+    console.log(res)
+  })
+}
 </script>
 
 <template>
@@ -122,24 +152,24 @@ const deleteProject = (id) => {
       <p class="drawerItemTitle">项目图标</p>
       <div class="iconImgBox" @click="updataIcon">
         <input type="file" id="iconInput" style="opacity: 0; position: absolute;">
-        <div class="addIconImg" v-show="tempUrl === null">
+        <div class="addIconImg" v-show="icon_img === null">
           <img src="../assets/imgs/addImgIcon.png" alt="">
         </div>
-        <img :src=tempUrl alt="" v-show="tempUrl !== null">
+        <img :src=BaseUrl+icon_img alt="" v-show=" icon_img !== null ">
       </div>
       <p class="drawerItemTitle">项目介绍</p>
-      <n-input v-model:value="Introduction" type="textarea" placeholder="请输入项目介绍" class="textarea" autosize />
+      <n-input v-model:value=" Introduction " type="textarea" placeholder="请输入项目介绍" class="textarea" autosize />
       <p class="drawerItemTitle">我们能做什么</p>
-      <n-input v-model:value="we_do" type="textarea" placeholder="我们能做什么？" class="textarea" autosize />
+      <n-input v-model:value=" we_do " type="textarea" placeholder="我们能做什么？" class="textarea" autosize />
       <p class="drawerItemTitle">项目案例</p>
       <div class="projectImg">
         <input type="file" name="" id="projectImgs">
         <div class="projectImgBox">
-          <div class="projectImgBoxItem" v-for="(item, index) in tempUrlList">
-            <img :src="item" alt="">
+          <div class="projectImgBoxItem">
+            <img alt="">
           </div>
         </div>
-        <n-button type="primary" @click="updataProjectImg">上传图片</n-button>
+        <n-button type="primary" @click=" updataProjectImg ">上传图片</n-button>
       </div>
     </t-drawer>
     <div class="infoBox">
@@ -150,19 +180,19 @@ const deleteProject = (id) => {
           <li>项目名</li>
           <li>操作</li>
         </ul>
-        <ul class="listItem" v-for="(item, index) in projectList" :key="item.id">
+        <ul class="listItem" v-for="( item, index ) in  projectList " :key=" item.id ">
           <li>{{ item.id }}</li>
           <li>
-            <img :src="BaseUrl + item.icon_img" alt="">
+            <img :src=" BaseUrl + item.icon_img " alt="">
           </li>
           <li>{{ item.name }}</li>
           <li>
-            <t-button theme="primary" style="margin-right: 20px;">编辑</t-button>
+            <t-button theme="primary" style="margin-right: 20px;" @click="editProjectBtn(item)">编辑</t-button>
             <t-button theme="danger" @click="deleteProject(item.id)">删除</t-button>
           </li>
         </ul>
         <div class="add">
-          <img src="../assets/imgs/addIcon.png" alt="" @click="showDrawer">
+          <img src="../assets/imgs/addIcon.png" alt="" @click=" showDrawer ">
         </div>
       </div>
     </div>
@@ -248,7 +278,8 @@ const deleteProject = (id) => {
 }
 
 .listItem>li:nth-child(2)>img {
-  width: 15%;
+  width: 50px;
+  height: 50px;
 }
 
 .listItem>li {

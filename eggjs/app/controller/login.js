@@ -1,7 +1,6 @@
 'use strict';
 
 const { Controller } = require('egg');
-const jwt = require('jsonwebtoken'); // 导入 jsonwebtoken 库
 
 class LoginController extends Controller {
   async index() {
@@ -9,6 +8,7 @@ class LoginController extends Controller {
     const { username, password } = ctx.request.body; // 获取请求体中的数据
     // 使用 this.app.mysql.query 方法执行数据库查询
     const res = await this.app.mysql.get('user', { username, password });
+    // 判断查询结果是否为空
     if (res === null) {
       ctx.body = {
         code: 1,
@@ -16,7 +16,6 @@ class LoginController extends Controller {
       };
     } else {
       const { id } = res;
-      const token = jwt.sign({ userId: id }, 'your-secret-key', { expiresIn: '1h' }); // 生成 token
       ctx.body = {
         code: 0,
         msg: '登录成功',
