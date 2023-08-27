@@ -16,7 +16,7 @@ export default {
       method: "post",
       data,
       headers: {
-        "Content-Type":"multipart/form-data"
+        "Content-Type": "multipart/form-data",
       },
     });
   },
@@ -29,7 +29,7 @@ export default {
     });
   },
   // 获取文章列表
-  getArticleList: (id='') => {
+  getArticleList: (id = "") => {
     return service({
       url: "/api/getArticle?id=" + id,
       method: "get",
@@ -60,7 +60,7 @@ export default {
     });
   },
   // 获取banner
-  getBanner: (id='') => {
+  getBanner: (id = "") => {
     return service({
       url: "/api/getBanner?id=" + id,
       method: "get",
@@ -91,7 +91,7 @@ export default {
     });
   },
   // 获取项目列表
-  getProjectList: (id='') => { 
+  getProjectList: (id = "") => {
     return service({
       url: "/api/getProject?id=" + id,
       method: "get",
@@ -111,6 +111,14 @@ export default {
       url: "/api/updataProject",
       method: "post",
       data,
+    });
+  },
+  // 检验token
+  checkToken: (data) => {
+    return service({
+      url: "/api/checkToken",
+      method: "post",
+      data
     });
   },
 };

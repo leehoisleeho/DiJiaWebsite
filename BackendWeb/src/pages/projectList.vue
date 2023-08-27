@@ -33,7 +33,6 @@ const showDrawer = () => {
 // 确认抽屉
 const onConfirm = () => {
   if (isEdit.value) {
-    console.log('更新项目')
     editProject()
     return
   }
@@ -44,7 +43,6 @@ const onClose = () => {
   visible.value = false
 }
 const addProject = async () => {
-  console.log('添加项目')
   project_imgs.value = projectImgList.value.join(',')
   try {
     api.addProject({
@@ -101,7 +99,7 @@ const updataProjectImg = () => {
   document.getElementById('projectImgs').click()
   projectImgs.addEventListener('change', handleChangeProjectImg)
 }
-const projectImgList =ref([])
+const projectImgList = ref([])
 const handleChangeProjectImg = async () => {
   const projectImgs = document.getElementById('projectImgs');
   let res = await uploadImg(projectImgs.files)
@@ -155,7 +153,6 @@ const editProject = () => {
   })
 }
 </script>
-
 <template>
   <div class="container">
     <t-drawer destroyOnClose header v-model:visible="visible" @confirm="onConfirm" @cancel="onCancle" size="800px">
@@ -168,22 +165,22 @@ const editProject = () => {
         <div class="addIconImg" v-show="icon_img === null">
           <img src="../assets/imgs/addImgIcon.png" alt="">
         </div>
-        <img :src=BaseUrl+icon_img alt="" v-show=" icon_img !== null ">
+        <img :src="BaseUrl + icon_img"  v-show="icon_img !== null">
       </div>
       <p class="drawerItemTitle">项目介绍</p>
-      <n-input v-model:value=" Introduction " type="textarea" placeholder="请输入项目介绍" class="textarea" autosize />
+      <n-input v-model:value="Introduction" type="textarea" placeholder="请输入项目介绍" class="textarea" autosize />
       <p class="drawerItemTitle">我们能做什么</p>
-      <n-input v-model:value=" we_do " type="textarea" placeholder="我们能做什么？" class="textarea" autosize />
+      <n-input v-model:value="we_do" type="textarea" placeholder="我们能做什么？" class="textarea" autosize />
       <p class="drawerItemTitle">项目案例</p>
       <div class="projectImg">
         <input type="file" name="" id="projectImgs">
         <div class="projectImgBox">
-          <div class="projectImgBoxItem" v-for="(item,index) in projectImgList" :key="index" >
-            <img :src="BaseUrl + item" >
+          <div class="projectImgBoxItem" v-for="(item, index) in projectImgList" :key="index">
+            <img :src="BaseUrl + item">
             <img src="../assets/imgs/delete_fill.png" alt="" class="_delImgIcon" @click="deleteImg(index)">
           </div>
         </div>
-        <n-button type="primary" @click=" updataProjectImg ">上传图片</n-button>
+        <n-button type="primary" @click="updataProjectImg">上传图片</n-button>
       </div>
     </t-drawer>
     <div class="infoBox">
@@ -194,10 +191,10 @@ const editProject = () => {
           <li>项目名</li>
           <li>操作</li>
         </ul>
-        <ul class="listItem" v-for="( item, index ) in  projectList " :key=" item.id ">
+        <ul class="listItem" v-for="( item, index ) in  projectList " :key="item.id">
           <li>{{ item.id }}</li>
           <li>
-            <img :src=" BaseUrl + item.icon_img " alt="">
+            <img :src="BaseUrl + item.icon_img" alt="">
           </li>
           <li>{{ item.name }}</li>
           <li>
@@ -206,7 +203,7 @@ const editProject = () => {
           </li>
         </ul>
         <div class="add">
-          <img src="../assets/imgs/addIcon.png" alt="" @click=" showDrawer ">
+          <img src="../assets/imgs/addIcon.png" alt="" @click="showDrawer">
         </div>
       </div>
     </div>
@@ -214,7 +211,6 @@ const editProject = () => {
 </template>
 
 <style scoped>
-
 #projectImgs {
   opacity: 0;
   position: absolute;
@@ -229,7 +225,7 @@ const editProject = () => {
 .projectImgBoxItem>img {
   width: 150px;
   height: 150px;
-  
+
 }
 
 .projectImgBoxItem {
@@ -243,15 +239,17 @@ const editProject = () => {
   position: relative;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
-._delImgIcon{
+
+._delImgIcon {
   width: 25px !important;
   height: 25px !important;
   position: absolute;
   right: 2px;
   top: 2px;
   cursor: pointer;
-  box-shadow:none !important;
+  box-shadow: none !important;
 }
+
 .textarea {
   height: 200px;
 }

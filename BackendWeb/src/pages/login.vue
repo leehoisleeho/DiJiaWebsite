@@ -18,18 +18,18 @@ import api from '../../API/api.js';
 const account = ref('');
 const password = ref('');
 const login = () => {
+  console.log(account.value, password.value)
   api.login({
     username: account.value,
     password: password.value
   }).then(res => {
+    const token = res.token;
     let code = res.code;
-    let token = res.token;
-    // 把token存到sessionStorage
-    sessionStorage.setItem('token', token);
     if (code === 0) {
+      sessionStorage.setItem('token', token);
       router.push('/');
     } else if (code === 1) {
-      
+      console.log('登录失败')
     }
   })
 }
