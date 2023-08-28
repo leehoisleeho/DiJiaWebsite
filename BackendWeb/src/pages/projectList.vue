@@ -2,8 +2,10 @@
 import { NButton, NInput } from 'naive-ui'
 import { onMounted, ref } from 'vue'
 import api from '../../API/api'
-const BaseUrl = 'http://127.0.0.1:7001'
+import config from "../config.js"
+const BaseUrl = config.BASE_URL
 const projectList = ref([])
+
 onMounted(() => {
   api.getProjectList().then(res => {
     projectList.value = res.data
@@ -132,7 +134,11 @@ const editProjectBtn = (item) => {
   Introduction.value = item.Introduction
   we_do.value = item.we_do
   icon_img.value = item.icon_img
-  projectImgList.value = item.project_imgs.split(',')
+  if(item.project_imgs===''){
+    projectImgList.value = []
+  }else {
+    projectImgList.value = item.project_imgs.split(',')
+  }
 }
 // 更新项目的方法
 const editProject = () => {
@@ -174,7 +180,8 @@ const editProject = () => {
       <p class="drawerItemTitle">项目案例</p>
       <div class="projectImg">
         <input type="file" name="" id="projectImgs">
-        <div class="projectImgBox">
+        <div v-show="projectImgList.length===0" style="margin-bottom: 20px">暂无案例图片</div>
+        <div class="projectImgBox" v-show="projectImgList.length!==0">
           <div class="projectImgBoxItem" v-for="(item, index) in projectImgList" :key="index">
             <img :src="BaseUrl + item">
             <img src="../assets/imgs/delete_fill.png" alt="" class="_delImgIcon" @click="deleteImg(index)">

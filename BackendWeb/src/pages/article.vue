@@ -38,6 +38,7 @@ const onConfirm = async () => {
  */
 const getArticleList = () => {
   api.getArticleList().then(res => {
+    console.log(res)
     articleList.value = res.data;
     temUrl.value = '';
     articleList.value.forEach(element => {
@@ -160,7 +161,7 @@ const updataArticle = () => {
           <li>ID</li>
           <li>文章名称</li>
           <li>文章封面</li>
-          <li>点赞数</li>
+          <li>浏览量</li>
           <li>发布日期</li>
           <li>操作</li>
         </ul>

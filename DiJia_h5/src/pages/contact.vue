@@ -4,6 +4,7 @@ const { BASE_URL } = config
 import { ref ,onMounted} from 'vue'
 import { get } from  '../../API/service.js'
 const projectList = ref([])
+import { useRoute, useRouter } from 'vue-router';
 import { post } from '../../API/service.js'
 onMounted(()=>{
   get('/h5/api/getProject').then(res=>{
@@ -20,7 +21,7 @@ const industry =ref('')
 const industryList = ref([
     '金融服务行业','医疗保健行业',"制造业",'传统零售',"娱乐行业","教育行业","酒店",'房地产','其他'
 ])
-
+const router = useRouter();
 const submit = ()=>{
   const data = {
     projectname:projectname.value,
@@ -29,7 +30,7 @@ const submit = ()=>{
     industry:industry.value
   }
   post('/api/addContact',data).then(res=>{
-    console.log(res)
+    router.push('/success')
   })
 }
 
