@@ -171,6 +171,13 @@ const toAbout = () => {
   font-size: 20px;
   color: #999;
 }
+.newsListInfo>div:nth-child(1) {
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  width: 500px;
+  color: #333333;
+}
 .newsListInfo{
   height: 130px;
   display: flex;
@@ -277,7 +284,7 @@ const toAbout = () => {
 }
 
 .navBox_item>li>span {
-  color: #666;
+  color: #333;
   font-size: 24px;
   text-align: center;
 }

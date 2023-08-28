@@ -10,16 +10,16 @@ onMounted(() => {
   get('/h5/api/getArticle?id=' + id).then(res => {
     data.value = res.data
     data.value.createtime = data.value.createtime.split('T')[0]
+    // 每次新闻页面加载 liks + 1
+    let n = res.data.likes + 1
     post('/h5/api/updataArticle', {
       id: data.value.id,
-      likes: data.value.likes + 1,
+      likes: n,
       content: data.value.content,
       imgs: data.value.imgs,
       title: data.value.title,
     })
   })
-
-
 })
 </script>
 
@@ -33,13 +33,10 @@ onMounted(() => {
     </div>
     <div class="info" v-html="data.content"></div>
   </div>
-  <div class="dianzanBox">
-    <!-- <img src="../../public/imgs/dianzan_active.png" /> -->
-    <!-- <span>浏览量 {{ data.likes }} 次</span> -->
-  </div>
 </template>
 
 <style scoped>
+
 .dianzanBox>span {
   color: #999;
   font-size: 25px;
@@ -74,7 +71,9 @@ onMounted(() => {
 
 .info {
   padding: 20px 30px;
-  color: #636363;
   text-align: justify;
+}
+img{
+  width: 100% !important;
 }
 </style>

@@ -1,19 +1,28 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { get } from '../../API/service';
 const BaseUrl = 'http://127.0.0.1:7001'
 const data = ref('')
-const route = useRoute();
 const imgList = ref([])
+const route = useRoute()
 onMounted(() => {
   const id = route.query.id
   get('/h5/api/getProject?id=' + id).then(res => {
-    console.log(res)
     data.value = res.data
-    imgList.value = res.data.project_imgs.split(',')
+    if(res.data.project_imgs===''){
+      imgList.value = []
+    }else if(res.data.project_imgs!==''){
+      imgList.value = res.data.project_imgs.split(',')
+    }
   })
 })
+const router = useRouter();
+const toContact = ()=>{
+  router.push({
+    path: '/contact',
+  })
+}
 </script>
 <template>
   <div class="header"></div>
@@ -36,16 +45,22 @@ onMounted(() => {
   </div>
   <div class="infoBoxList_1">
     <h3>案例图片</h3>
-    <div class="infoBoxListItem">
+    <div class="noneImg" v-show="imgList.length===0">暂无案例图片</div>
+    <div class="infoBoxListItem" v-show="imgList.length!==0">
       <img :src="BaseUrl + item" v-for="item in imgList">
     </div>
   </div>
   <div class="btnBox">
-    <t-button size="large" theme="primary" block>联系我们</t-button>
+    <t-button size="large" theme="primary" block @click="toContact">联系我们</t-button>
   </div>
 </template>
 
 <style scoped>
+.noneImg{
+  padding: 0 30px;
+  color: #999999;
+  font-size: 25px;
+}
 .Introduction{
   height: 300px;
 }
@@ -78,7 +93,8 @@ onMounted(() => {
 }
 
 .infoBoxList_1>.infoBoxListItem {
-  color: #333;
+  color: #666666;
+  line-height: 2em;
 }
 
 .infoBoxList_1>h3 {
