@@ -43,9 +43,17 @@ editorConfig.MENU_CONF['uploadImage'] = {
     insertFn(url)
   },
 }
-
-
-
+/**
+ * 上传视频的配置
+ *  server 上传的接口地址
+ */
+editorConfig.MENU_CONF['uploadVideo'] = {
+  server: BaseUrl + '/api/updataImg',
+  customInsert(res, insertFn) {
+    let url = BaseUrl + res.data.url
+    insertFn(url)
+  },
+}
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
 }
