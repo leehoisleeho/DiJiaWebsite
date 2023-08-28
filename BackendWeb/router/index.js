@@ -22,8 +22,8 @@ const routes = [
         component: () => import("../src/pages/article.vue"),
       },
       {
-        path: "about",
-        component: () => import("../src/pages/about.vue"),
+        path: "basicTemplate",
+        component: () => import("../src/pages/basicTemplate.vue"),
       },
       {
         path: "contact",

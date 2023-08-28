@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import config from '../config.js'
 // 定义路由
 const router = useRouter();
 /**
@@ -23,9 +24,9 @@ onMounted(() => {
   <div class="container">
     <!-- 侧边栏 -->
     <div class="sidebarBox">
+      <h1>{{config.systemName}}</h1>
       <div class="sidebarHeader">
         <img src="../assets/imgs/logo_1.png" alt="">
-        <h1>后台管理系统</h1>
       </div>
       <div>
         <t-menu @change="onChange" :value=index>
@@ -44,10 +45,13 @@ onMounted(() => {
           <t-menu-item :value=4 to="/contact">
             联系我们
           </t-menu-item>
+          <t-submenu value="5" title="模板">
+            <t-menu-item value="5-1" to="/basicTemplate">页面-1</t-menu-item>
+          </t-submenu>
         </t-menu>
       </div>
       <div class="foot">
-        Copyright © 2020 - 2023 迪迦文化传媒公司版权所有
+        {{config.copyright}}
       </div>
     </div>
     <!-- 主要内容 -->
@@ -80,20 +84,23 @@ onMounted(() => {
   padding: 0 20px;
 }
 
-.sidebarHeader>h1 {
-  font-size: 18px;
-  color: #666;
-  margin-top: 10px;
-  font-weight: 400;
+.sidebarBox>h1 {
+  font-size: 15px;
+  color: #2a2a2a;
+  font-weight: 440;
+  text-align: center;
+  height: 50px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .sidebarHeader>img {
-  width: 50px;
+  width: 45px;
 }
 
 .sidebarHeader {
   text-align: center;
-  padding-top: 20px;
 }
 
 .sidebarBox {

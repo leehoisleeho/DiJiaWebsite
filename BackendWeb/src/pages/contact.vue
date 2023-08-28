@@ -39,7 +39,6 @@ const del = (id)=>{
         </li>
       </ul>
     </div>
-
   </div>
 </template>
 <style scoped>
@@ -55,6 +54,7 @@ const del = (id)=>{
   display: flex;
   height: 70px;
   align-items: center;
+  font-weight: 600;
 }
 .tableinfo>li{
   flex: 1;
