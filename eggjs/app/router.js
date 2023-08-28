@@ -27,7 +27,8 @@ module.exports = (app) => {
   router.post("/api/delProject", authMiddleware, controller.project.del); // 删除项目接口的路由
   router.get("/api/getProject", authMiddleware, controller.project.get); // 获取项目接口的路由
   router.post("/api/updataProject", authMiddleware, controller.project.edit); // 更新项目接口的路由
-  router.post("/api/addContact",controller.contact.add) // 添加联系我们
+  router.get("/api/getContact",authMiddleware,controller.contact.get) // 获取联系我们列表
+  router.post("/api/delContact",authMiddleware,controller.contact.del) // 删除联系我们
 
   /**
    * H5官网
@@ -36,4 +37,5 @@ module.exports = (app) => {
   router.get("/h5/api/getProject", controller.project.get); // 获取项目
   router.get("/h5/api/getBanner", controller.banner.get); // 获取轮播图
   router.post("/h5/api/updataArticle", controller.article.edit); // 更新文章接口的路由
+  router.post("/api/addContact",controller.contact.add) // 添加联系我们
 };

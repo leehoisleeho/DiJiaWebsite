@@ -38,7 +38,6 @@ const onConfirm = async () => {
  */
 const getArticleList = () => {
   api.getArticleList().then(res => {
-    console.log(res)
     articleList.value = res.data;
     temUrl.value = '';
     articleList.value.forEach(element => {

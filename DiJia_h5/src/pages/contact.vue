@@ -106,14 +106,7 @@ const submit = ()=>{
   font-size: 20px;
   padding-bottom: 50px;
 }
-.van-cell{
-  height: 80px;
-  border: 1px solid #e3e3e3;
-  display: flex;
-  align-items: center;
-  color: #999999;
-  font-size: 25px;
-}
+
 .van-field{
   border: 1px solid #e3e3e3;
   height: 80px;

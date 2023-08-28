@@ -121,4 +121,36 @@ export default {
       data
     });
   },
+  // 获取联系我们列表
+  getContactList: (data) => {
+    return service({
+      url: "/api/getContactList",
+      method: "post",
+      data,
+    });
+  },
+  // 删除联系我们
+  deleteContact: (data) => {
+    return service({
+      url: "/api/delContact",
+      method: "post",
+      data,
+    });
+  },
+  // 获取联系我们
+  getContact: (data) => {
+    return service({
+      url: "/api/getContact",
+      method: "get",
+      data,
+    });
+  },
+  // 删除联系我们
+  delContact: (data) => {
+    return service({
+      url: "/api/delContact",
+      method: "post",
+      data,
+    });
+  }
 };
