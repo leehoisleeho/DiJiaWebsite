@@ -1,11 +1,9 @@
-<script setup></script>
+<script setup>
+
+</script>
 
 <template>
-  <div class="container">
-    <div class="infoBox">
-      里面放关于我们的内容
-    </div>
-  </div>
+
 </template>
 
 <style scoped>

@@ -2,6 +2,7 @@
 const path = require("path");
 const fs = require("fs");
 const { Controller } = require("egg");
+const BaseUrl ='http://localhost:7001'
 
 class UpdataImgController extends Controller {
   async index() {
@@ -16,18 +17,16 @@ class UpdataImgController extends Controller {
       await fs.promises.rename(file.filepath, path.join(uploadDir, filename));
       // 将图片地址返回给前端
       ctx.body = {
-        code: 0,
-        msg: "上传成功",
+        errno: 0,
         data: {
-          url: "/public/uploads/" + filename,
-        },
+          url: "/public/uploads/" + filename
+        }
       };
     } catch (err) {
       ctx.body = {
-        code: 1,
-        msg: err,
-      };
-      console.log(err);
+        errno: 1,
+        message: '上传失败',
+      }
     }
   }
 }

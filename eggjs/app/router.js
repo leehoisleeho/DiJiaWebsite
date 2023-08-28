@@ -18,7 +18,7 @@ module.exports = (app) => {
   router.get("/api/getArticle", authMiddleware, controller.article.get); // 获取文章接口的路由
   router.delete("/api/delArticle", authMiddleware, controller.article.del); // 删除文章接口的路由
   router.post("/api/updataArticle", authMiddleware, controller.article.edit); // 更新文章接口的路由
-  router.post("/api/updataImg", authMiddleware, controller.updataImg.index); // 上传图片接口的路由
+  router.post("/api/updataImg", controller.updataImg.index); // 上传图片接口的路由
   router.post("/api/addBanner", authMiddleware, controller.banner.add); // 添加轮播图接口的路由
   router.get("/api/getBanner", authMiddleware, controller.banner.get); // 获取轮播图接口的路由
   router.delete("/api/delBanner", authMiddleware, controller.banner.del); // 删除轮播图接口的路由

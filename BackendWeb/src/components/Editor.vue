@@ -1,14 +1,13 @@
 <script setup>
-import { onBeforeUnmount, ref, shallowRef, onMounted, watch, defineEmits } from 'vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted, watch  } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { editorStore } from '../../store/index.js'
-
+const BaseUrl = 'http://127.0.0.1:7001'
 const props = defineProps({
   editor: {
     type: String
   }
 })
-
 
 // 编辑器实例，必须用 shallowRef，重要！
 const editorRef = shallowRef()
@@ -27,6 +26,25 @@ const editorConfig = {
   placeholder: '请输入内容...',
   MENU_CONF: { /* 菜单配置，下文解释 */ }
 }
+editorConfig.MENU_CONF['lineHeight'] = {
+  lineHeightList: ['1', '1.5', '2', '2.5','3.5']
+}
+
+/**
+ * 编辑器图片上传的方法
+ * server 上传的接口地址
+ * insertFn 插入图片的方法，可自定义
+ */
+// 图片上传地址配置
+editorConfig.MENU_CONF['uploadImage'] = {
+  server: BaseUrl + '/api/updataImg',
+  customInsert(res, insertFn) {
+    let url = BaseUrl + res.data.url
+    insertFn(url)
+  },
+}
+
+
 
 const handleCreated = (editor) => {
   editorRef.value = editor // 记录 editor 实例，重要！
