@@ -5,20 +5,30 @@ import {ref} from 'vue'
  * 抽屉
  */
 const visible = ref(false)
-const handleClick = () => {
+const showDrawer = () => {
   visible.value = true
 }
 const onConfirm = () => {
-  visible.value = false
+  setTimeout(() => {
+    dataList.value.push({
+      id: 5,
+      name: "yaoyao"
+    })
+    visible.value = false
+  }, 500)
 }
 // 确认删除
 const onConfirmDel = (index) => {
   console.log('删除')
+  console.log(index)
   dataList.value.splice(index, 1)
 }
 // 数据列表
 const dataList = ref([
-  1, 2, 3, 4, 5, 6, 7
+  {id: 1, name: "leeho"},
+  {id: 2, name: "lihao"},
+  {id: 3, name: "likunling"},
+  {id: 4, name: "lapland"},
 ])
 </script>
 
@@ -29,21 +39,21 @@ const dataList = ref([
     </t-drawer>
     <div class="infoBox">
       <div class="add">
-        <t-button theme="success" style="margin-right: 20px" @click="handleClick">新增</t-button>
+        <t-button theme="success" style="margin-right: 20px" @click="showDrawer">新增</t-button>
       </div>
       <ul class="tableTitle">
-        <li>ID</li>
+        <li>序号</li>
         <li>合作项目</li>
         <li>联系人</li>
         <li>联系方式</li>
         <li>联系人行业</li>
         <li>操作</li>
       </ul>
-      <transition-group name="fade" tag="ul" mode="out-in">
+      <TransitionGroup name="list" tag="div">
         <ul class="tableinfo" v-for="(item,index) in dataList" :key="index">
           <li>1</li>
           <li>2</li>
-          <li>3</li>
+          <li>{{ item.name }}</li>
           <li>4</li>
           <li>5</li>
           <li class="operate">
@@ -53,18 +63,34 @@ const dataList = ref([
             </t-popconfirm>
           </li>
         </ul>
-      </transition-group>
+      </TransitionGroup>
     </div>
   </div>
 </template>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 500ms;
+.list-enter-active,
+.list-leave-active {
+  transition: all 300ms ease;
 }
 
-.fade-enter, .fade-leave-to {
+.list-enter-from {
   opacity: 0;
+  transform: translateY(-50px);
+}
+
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.tableinfo {
+  display: flex;
+  height: 60px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  border-bottom: 1px solid #efefef;
 }
 
 .add {
@@ -76,15 +102,6 @@ const dataList = ref([
 .operate {
   display: flex;
   justify-content: center;
-}
-
-.tableinfo {
-  display: flex;
-  height: 60px;
-  align-items: center;
-  margin-left: auto;
-  margin-right: auto;
-  border-bottom: 1px solid #efefef;
 }
 
 .tableTitle {
