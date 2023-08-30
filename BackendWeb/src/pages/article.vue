@@ -131,6 +131,8 @@ const updataArticle = () => {
   }).then(res => {
     getArticleList();
     editorstore.setVal('')
+    imgs.value = ''
+    file.value = ''
     visible.value = false;
   })
 }
