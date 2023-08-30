@@ -2,7 +2,8 @@
 import { onBeforeUnmount, ref, shallowRef, onMounted, watch  } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { editorStore } from '../../store/index.js'
-const BaseUrl = 'http://127.0.0.1:7001'
+import config from '../config.js'
+const BaseUrl = config.BASE_URL
 const props = defineProps({
   editor: {
     type: String

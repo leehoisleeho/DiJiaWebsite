@@ -1,99 +1,84 @@
 "use strict";
 
-
-const { Controller } = require("egg");
+const {Controller} = require("egg");
 
 class addArticleController extends Controller {
-  // 添加文章
-  async add() {
-    const { ctx } = this;
-    const { title, content, imgs } = ctx.request.body;
-    const result = await ctx.service.addArticle.index({
-      title,
-      content,
-      imgs
-    });
-    if (result>0) {
-      ctx.body = {
-        code: 0,
-        msg: "添加成功"
-      };
-    }else{
-      ctx.body = {
-        code: 1,
-        msg: "添加失败"
-      };
+    tableName = "article";
+
+    // 添加文章
+    async add() {
+        const {ctx} = this;
+        let data = ctx.request.body;
+        // 获取当前时间
+        data.createtime = new Date();
+        const result = await ctx.service.add.index(data, this.tableName);
+        if (result.affectedRows === 1) {
+            ctx.body = {
+                code: 0,
+                msg: "添加成功",
+            };
+        } else {
+            ctx.body = {
+                code: 1,
+                msg: "添加失败",
+            };
+        }
     }
-  }
-  // 获取文章
-  async get() {
-    const { ctx } = this;
-    const { id } = ctx.query;
-    const result = await ctx.service.getArticle.index({
-      id
-    });
-    if (result) {
-      ctx.body = {
-        code: 0,
-        msg: "获取成功",
-        data: result
-      };
-    }else{
-      ctx.body = {
-        code: 1,
-        msg: "获取失败"
-      };
+
+    // 获取文章
+    async get() {
+        const {ctx} = this;
+        const {id} = ctx.query;
+        const result = await ctx.service.get.index(id, this.tableName);
+        if (result) {
+            ctx.body = {
+                code: 0,
+                msg: "获取成功",
+                data: result
+            };
+        } else {
+            ctx.body = {
+                code: 1,
+                msg: "获取失败"
+            };
+        }
     }
-  }
-  // 删除文章
-  async del() {
-    const { ctx } = this;
-    const { id } = ctx.request.body;
-    if(!id){
-      ctx.body = {
-        code: 1,
-        msg: "id不能为空"
-      };
-      return
+
+    // 删除文章
+    async del() {
+        const {ctx} = this;
+        const {id} = ctx.request.body;
+        const result = await ctx.service.delete.index({id}, this.tableName);
+        if (result.affectedRows === 1) {
+            ctx.body = {
+                code: 0,
+                msg: "删除成功"
+            };
+        } else {
+            ctx.body = {
+                code: 1,
+                msg: "删除失败"
+            };
+        }
     }
-    const result = await ctx.service.delArticle.index({
-      id
-    });
-    if (result) {
-      ctx.body = {
-        code: 0,
-        msg: "删除成功"
-      };
-    }else{
-      ctx.body = {
-        code: 1,
-        msg: "删除失败"
-      };
+
+    // 编辑文章
+    async edit() {
+        const {ctx} = this;
+        let  data  = ctx.request.body;
+        const result = await ctx.service.edit.index(data, this.tableName);
+        if (result) {
+            ctx.body = {
+                code: 0,
+                msg: "更新成功"
+            };
+        } else {
+            ctx.body = {
+                code: 1,
+                msg: "更新失败"
+            };
+        }
     }
-  }
-  // 编辑文章
-  async edit() {
-    const { ctx } = this;
-    const { id,title, content, imgs,likes } = ctx.request.body;
-    const result = await ctx.service.editAritcle.index({
-      id,
-      title,
-      content,
-      imgs,
-      likes,
-    });
-    if (result) {
-      ctx.body = {
-        code: 0,
-        msg: "编辑成功"
-      };
-    }else{
-      ctx.body = {
-        code: 1,
-        msg: "编辑失败"
-      };
-    }
-  }
 }
 
 module.exports = addArticleController;

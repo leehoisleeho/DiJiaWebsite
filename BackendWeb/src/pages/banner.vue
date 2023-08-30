@@ -2,8 +2,8 @@
 import { onMounted, ref } from 'vue'
 import api from '../../API/api'
 import { NButton, NSelect } from 'naive-ui'
-
-const BaseUrl = 'http://127.0.0.1:7001'
+import config from "../config.js";
+const BaseUrl = config.BASE_URL
 
 onMounted(() => {
   getBannerList()
@@ -23,12 +23,13 @@ const getBannerList = () => {
  */
 const visible = ref(false)
 const drawerShow = () => {
-  isEdit.value = false
   visible.value = true
-  article_id.value = null
-  article_title.value = null
-  tempUrl.value = null
+  isEdit.value = false
+  article_id.value = ''
+  article_title.value = ''
+  tempUrl.value = ''
   file.value = ''
+  value.value = ''
 }
 const img = ref(null)
 const onConfirm = async () => {
@@ -76,7 +77,6 @@ const openSelect = () => {
   if (isEdit.value) {
     console.log(value.value)
     api.getArticleList().then(res => {
-      console.log(res.data)
       options.value = res.data.map(item => {
         console.log(item.title)
         if (item.title === value.value) {
@@ -168,6 +168,11 @@ const editBanner = () => {
     article_title: article_title.value
   }).then(res => {
     visible.value = false
+    isEdit.value = false
+    article_id.value = ''
+    article_title.value = ''
+    tempUrl.value = ''
+    file.value = ''
     getBannerList()
   })
 }
@@ -183,8 +188,8 @@ const editBanner = () => {
           v-model:value="value" />
         <p class="drawerItemTitle">上传图片</p>
         <div class="imgBox">
-          <img :src="tempUrl" alt="" v-show="tempUrl !== null">
-          <div class="imgNone" v-show="tempUrl === null">
+          <img :src="tempUrl" alt="" v-show="tempUrl !== ''">
+          <div class="imgNone" v-show="tempUrl === ''">
             <img src="../assets/imgs/addImgIcon.png" alt="">
           </div>
           <input type="file" id="inputFile">

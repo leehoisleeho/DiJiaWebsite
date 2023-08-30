@@ -1,16 +1,24 @@
 <script setup>
-import { onMounted, ref } from "vue";
-import { NButton } from "naive-ui";
+import {onMounted, ref} from "vue";
+import {NButton} from "naive-ui";
 import api from "../../API/api.js";
-import { editorStore } from '../../store/index.js'
+import {editorStore} from '../../store/index.js'
+
 const editorstore = editorStore()
-const BaseUrl = 'http://127.0.0.1:7001'
+import config from '../config.js'
+
+const BaseUrl = config.BASE_URL
 /**
  * 抽屉组件
  */
 const visible = ref(false);
 const drawerShow = () => {
   visible.value = true;
+  title.value = "";
+  temUrl.value = "";
+  imgs.value = "";
+  editorstore.setVal("")
+  isEdit.value = false
 };
 // 储存上传成功后的 图片地址
 const imgs = ref('');
@@ -43,7 +51,7 @@ const getArticleList = () => {
     articleList.value.forEach(element => {
       element.createtime = element.createtime.split('T')[0];
       element.disabled = false;
-      if(element.title === '关于我们'){
+      if (element.title === '关于我们') {
         element.disabled = true;
       }
     });
@@ -105,13 +113,13 @@ const editArticle = id => {
   article_id.value = id;
   // 获取到文章详情
   api.getArticleList(id)
-    .then(res => {
-      title.value = res.data.title;
-      temUrl.value = BaseUrl + res.data.imgs;
-      imgs.value = res.data.imgs;
-      editorstore.setVal(res.data.content)
-      visible.value = true
-    })
+      .then(res => {
+        title.value = res.data.title;
+        temUrl.value = BaseUrl + res.data.imgs;
+        imgs.value = res.data.imgs;
+        editorstore.setVal(res.data.content)
+        visible.value = true
+      })
 }
 // 上传文章更新数据
 const updataArticle = () => {
@@ -135,7 +143,7 @@ const updataArticle = () => {
         <p style="color: #333; font-size: 20px">新增文章</p>
         <div class="inputBox">
           <div class="inputTitle">标题</div>
-          <t-input clearable placeholder="请输入文字标题" v-model="title" />
+          <t-input clearable placeholder="请输入文字标题" v-model="title"/>
         </div>
         <div class="inputBox">
           <div class="inputTitle">上传文件封面</div>
@@ -147,14 +155,14 @@ const updataArticle = () => {
         </div>
         <div class="inputBox">
           <div class="inputTitle">文章内容</div>
-          <Editor />
+          <Editor/>
         </div>
       </t-drawer>
     </div>
     <div class="infoBox">
       <div class="listBox">
         <div class="add">
-          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow" />
+          <img src="../assets/imgs/addIcon.png" alt="" @click="drawerShow"/>
         </div>
         <ul class="listBoxTitle">
           <li>ID</li>
@@ -168,13 +176,13 @@ const updataArticle = () => {
           <li>{{ item.id }}</li>
           <li>{{ item.title }}</li>
           <li>
-            <img :src="BaseUrl + item.imgs" alt="" />
+            <img :src="BaseUrl + item.imgs" alt=""/>
           </li>
           <li>{{ item.likes }}</li>
           <li>{{ item.createtime }}</li>
           <li>
             <t-button theme="primary" style="margin-right: 20px" @click="editArticle(item.id)">编辑</t-button>
-            <t-button theme="danger" @click="deleteArticle(item.id)" :disabled = "item.disabled">删除</t-button>
+            <t-button theme="danger" @click="deleteArticle(item.id)" :disabled="item.disabled">删除</t-button>
           </li>
         </ul>
       </div>
@@ -189,11 +197,11 @@ const updataArticle = () => {
   justify-content: center;
 }
 
-.updataBox>.n-button {
+.updataBox > .n-button {
   width: 100px;
 }
 
-.updataBox>img {
+.updataBox > img {
   width: 100px;
   height: 100px;
   margin-bottom: 10px;
@@ -208,7 +216,7 @@ const updataArticle = () => {
   margin-top: 20px;
 }
 
-.add>img {
+.add > img {
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -222,12 +230,12 @@ const updataArticle = () => {
   align-items: center;
 }
 
-.listItem>li:nth-child(3)>img {
+.listItem > li:nth-child(3) > img {
   width: 50px;
   height: 50px;
 }
 
-.listItem>li {
+.listItem > li {
   flex: 1;
   text-align: center;
   color: #333;
@@ -242,7 +250,7 @@ const updataArticle = () => {
   height: 80px;
 }
 
-.listBoxTitle>li {
+.listBoxTitle > li {
   flex: 1;
   text-align: center;
   color: #333;

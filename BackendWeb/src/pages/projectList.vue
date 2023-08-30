@@ -92,7 +92,6 @@ const updataIcon = () => {
 }
 const handleChange = async () => {
   const iconInput = document.getElementById('iconInput');
-  console.log(iconInput.files)
   icon_img.value = await uploadImg(iconInput.files)
 }
 
@@ -114,8 +113,7 @@ const deleteImg = (index) => {
 
 // 删除项目
 const deleteProject = (id) => {
-  console.log(id)
-  api.deleteProject(id).then(res => {
+  api.deleteProject({id}).then(res => {
     // 获取最新的数据
     api.getProjectList().then(res => {
       projectList.value = res.data

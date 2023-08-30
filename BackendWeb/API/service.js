@@ -1,5 +1,6 @@
 import axios from "axios";
-const BaseURL = "http://localhost:7001";
+import config from "../src/config.js";
+const BaseURL = config.BASE_URL;
 import router from "../router/index.js";
 import api from "./api.js";
 const service = axios.create({

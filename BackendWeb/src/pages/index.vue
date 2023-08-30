@@ -31,13 +31,13 @@ onMounted(() => {
       <div>
         <t-menu @change="onChange" :value=index>
           <t-menu-item :value=0 to="/dashboard">
-            仪表盘
+            首页
           </t-menu-item>
           <t-menu-item :value=1 to="/banner">
             轮播图
           </t-menu-item>
           <t-menu-item :value=2 to="/projectList">
-            金刚区
+            项目列表
           </t-menu-item>
           <t-menu-item :value=3 to="/article">
             文章

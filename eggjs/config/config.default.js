@@ -27,10 +27,10 @@ module.exports = (appInfo) => {
   // 配置mysql
   userConfig.mysql = {
     client: {
-      host: "127.0.0.1",
+      host: "119.45.199.52",
       port: "3306",
-      user: "root",
-      password: "lh123456",
+      user: "dijia",
+      password: "123456",
       database: "dijia",
     },
     app: true,
@@ -40,6 +40,14 @@ module.exports = (appInfo) => {
   userConfig.cors = {
     origin: "*",
     allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH",
+  };
+  // 服务端口配置
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 8888,
+      hostname: '127.0.0.1',
+    }
   };
   // 配置上传图片
   config.multipart = {

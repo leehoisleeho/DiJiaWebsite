@@ -6,7 +6,6 @@ class ProjectController extends Controller {
   async add() {
     const { ctx } = this;
     let data = ctx.request.body;
-    // 操作的表名
     const result = await ctx.service.add.index(data, this.tableName);
     if (result.affectedRows === 1) {
       ctx.body = {
@@ -22,9 +21,8 @@ class ProjectController extends Controller {
   }
   async del() {
     const { ctx } = this;
-    let data = ctx.request.body;
-    // 操作的表名
-    const result = await ctx.service.delete.index(data, this.tableName);
+    let { id } = ctx.request.body;
+    const result = await ctx.service.delete.index({id}, this.tableName);
     if (result.affectedRows === 1) {
       ctx.body = {
         code: 0,

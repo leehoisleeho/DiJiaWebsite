@@ -98,11 +98,11 @@ export default {
     });
   },
   // 删除项目
-  deleteProject: (id) => {
+  deleteProject: (data) => {
     return service({
       url: "/api/delProject",
       method: "post",
-      id,
+      data,
     });
   },
   // 更新项目

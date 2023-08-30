@@ -20,8 +20,7 @@ const onConfirm = () => {
 // 确认删除
 const onConfirmDel = (index) => {
   console.log('删除')
-  console.log(index)
-  dataList.value.splice(index, 1)
+  dataList.value.splice(index,1)
 }
 // 数据列表
 const dataList = ref([
@@ -50,7 +49,7 @@ const dataList = ref([
         <li>操作</li>
       </ul>
       <TransitionGroup name="list" tag="div">
-        <ul class="tableinfo" v-for="(item,index) in dataList" :key="index">
+        <ul class="tableinfo" v-for="(item,index) in dataList" :key="item.id">
           <li>1</li>
           <li>2</li>
           <li>{{ item.name }}</li>
@@ -81,7 +80,7 @@ const dataList = ref([
 
 .list-leave-to {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateX(30px);
 }
 
 .tableinfo {
