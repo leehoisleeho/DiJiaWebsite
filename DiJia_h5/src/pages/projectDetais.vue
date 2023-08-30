@@ -2,7 +2,8 @@
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { get } from '../../API/service';
-const BaseUrl = 'http://127.0.0.1:7001'
+import config from "../config.js";
+const BaseUrl = config.BASE_URL
 const data = ref('')
 const imgList = ref([])
 const route = useRoute()

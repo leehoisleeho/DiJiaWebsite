@@ -1,6 +1,7 @@
 // 封装axios方法
 import axios from "axios";
-const url = "http://127.0.0.1:7001";
+import config from "../src/config.js";
+const url = config.BASE_URL;
 export const request = (config) => {
   const instance = axios.create({
     baseURL: url,

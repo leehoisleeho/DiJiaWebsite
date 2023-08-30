@@ -76,4 +76,7 @@ onMounted(() => {
 img{
   width: 100% !important;
 }
+.newsBox{
+  height: 100vh;
+}
 </style>

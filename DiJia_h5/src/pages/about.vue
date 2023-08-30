@@ -3,7 +3,7 @@
   import { get } from '../../API/service'
   const content = ref('')
   onMounted(() => {
-    get('/h5/api/getArticle?id=42').then(res=>{
+    get('/h5/api/getArticle?id=22').then(res=>{
       content.value = res.data.content
     })
   })

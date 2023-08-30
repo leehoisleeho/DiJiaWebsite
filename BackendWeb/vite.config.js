@@ -6,6 +6,7 @@ import { TDesignResolver } from 'unplugin-vue-components/resolvers';
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
+  base: './',
   alias: {
     '@': path.resolve(__dirname, 'node_modules'),
   },

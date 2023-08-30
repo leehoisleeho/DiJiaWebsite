@@ -1,7 +1,8 @@
 <script setup>
 import { onMounted ,ref} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-const BaseUrl = "http://127.0.0.1:7001"
+import config from "../config.js";
+const BaseUrl = config.BASE_URL
 const router = useRouter();
 import { get } from "../../API/service";
 
@@ -139,7 +140,7 @@ const toAbout = () => {
           </div>
         </li>
       </ul>
-      <div class="newsBoxFoot" style="font-size: 13px;">查看更多</div>
+      <div class="newsBoxFoot">查看更多</div>
     </div>
     <!-- 关于我们 -->
     <div class="about">
@@ -226,9 +227,10 @@ const toAbout = () => {
 }
 
 .newsBoxFoot {
-  font-size: 20px;
+  font-size: 25px;
   color: #999;
   text-align: center;
+  margin-top: 30px;
 }
 
 .newsBoxTitle {
