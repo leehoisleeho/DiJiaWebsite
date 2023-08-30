@@ -1,11 +1,15 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
- <router-view></router-view>
+  <div class="container">
+    <router-view></router-view>
+  </div>
 </template>
 
 <style scoped>
-
+.container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+}
 </style>

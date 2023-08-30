@@ -172,6 +172,7 @@ const updataArticle = () => {
           <li>文章封面</li>
           <li>浏览量</li>
           <li>发布日期</li>
+          <li>轮播图</li>
           <li>操作</li>
         </ul>
         <ul class="listItem" v-for="item in articleList" :key="item.id">
@@ -182,6 +183,10 @@ const updataArticle = () => {
           </li>
           <li>{{ item.likes }}</li>
           <li>{{ item.createtime }}</li>
+          <li>
+            <span v-if="item.isbanner === 1" style="color: #ea4335">是</span>
+            <span v-if="item.isbanner === 0">否</span>
+          </li>
           <li>
             <t-button theme="primary" style="margin-right: 20px" @click="editArticle(item.id)">编辑</t-button>
             <t-button theme="danger" @click="deleteArticle(item.id)" :disabled="item.disabled">删除</t-button>

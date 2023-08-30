@@ -23,8 +23,8 @@ service.interceptors.request.use(async (config) => {
       isTokenValidating = true; // 开始验证标志设为 true
       // 等待验证请求完成
       const res = await api.checkToken({
-        token,
-      }); 
+        token
+      });
       if (res.code === 0) {
         isTokenValidating = false; // 验证结束，设为 false
         config.headers["Authorization"] = token;

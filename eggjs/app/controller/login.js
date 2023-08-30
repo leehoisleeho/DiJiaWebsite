@@ -2,7 +2,6 @@
 
 const { Controller } = require('egg');
 const jwt = require('jsonwebtoken');
-const secretKey = 'leeho';
 
 class LoginController extends Controller {
   async index() {
@@ -11,7 +10,7 @@ class LoginController extends Controller {
     // 使用 this.app.mysql.query 方法执行数据库查询
     const res = await this.app.mysql.get('user', { username, password });
     // 生成token
-    const token = jwt.sign({username}, secretKey, { expiresIn: '24h' });
+    const token = jwt.sign({username}, "lapland", { expiresIn: '24h' });
     // 判断是否查询到数据
     if (res === null) {
       ctx.body = {

@@ -12,6 +12,7 @@ module.exports = {
     enable: true,
     package: 'egg-cors',
   },
+  // token生成器
   jwt: {
     enable: true,
     package: 'egg-jwt',

@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref ,watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import api from '../../API/api'
 import {NButton, NSelect} from 'naive-ui'
 import config from "../config.js";
@@ -76,8 +76,8 @@ const selected = (e, option) => {
 // 打开选择器
 const openSelect = () => {
   if (isEdit.value) {
-    console.log(value.value)
     api.getArticleList().then(res => {
+      console.log(res)
       options.value = res.data.map(item => {
         if (item.title === value.value || item.isbanner === 1) {
           return {
@@ -94,7 +94,15 @@ const openSelect = () => {
     })
   } else {
     api.getArticleList().then(res => {
+      console.log(res)
       options.value = res.data.map(item => {
+        if (item.title === value.value || item.isbanner === 1) {
+          return {
+            label: item.title,
+            value: item.id,
+            disabled: true
+          }
+        }
         return {
           label: item.title,
           value: item.id
@@ -171,19 +179,6 @@ const editBannerBtn = (id) => {
     article_title.value = res.data.article_title
   })
 }
-// 监听article_id 值的改变
-watch(article_id,(newVal, oldVal)=>{
-  if(oldVal === ''){
-    return
-  }else {
-    api.editArticle({
-      id: article_id.value,
-      isbanner: 0
-    }).then(res => {
-      console.log(res)
-    })
-  }
-})
 // 编辑banner
 const editBanner = () => {
   api.editBanner({
@@ -245,7 +240,7 @@ const editBanner = () => {
             <img :src="BaseUrl + item.img" alt="">
           </li>
           <li>
-            <t-button theme="primary" style="margin-right: 20px;" @click="editBannerBtn(item.id)">编辑</t-button>
+<!--            <t-button theme="primary" style="margin-right: 20px;" @click="editBannerBtn(item.id)">编辑</t-button>-->
             <t-button theme="danger" @click="delBanner(item)">删除</t-button>
           </li>
         </ul>

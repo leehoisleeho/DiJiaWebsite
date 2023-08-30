@@ -47,6 +47,7 @@ onMounted(() => {
           </t-menu-item>
           <t-submenu value="5" title="模板">
             <t-menu-item value="5-1" to="/basicTemplate">页面-1</t-menu-item>
+            <t-menu-item value="5-2" to="/dataTemplate">页面-2</t-menu-item>
           </t-submenu>
         </t-menu>
       </div>

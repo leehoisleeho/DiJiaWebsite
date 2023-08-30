@@ -22,12 +22,16 @@ const routes = [
         component: () => import("../src/pages/article.vue"),
       },
       {
+        path: "contact",
+        component: () => import("../src/pages/contact.vue"),
+      },
+      {
         path: "basicTemplate",
         component: () => import("../src/pages/basicTemplate.vue"),
       },
       {
-        path: "contact",
-        component: () => import("../src/pages/contact.vue"),
+        path: "dataTemplate",
+        component: () => import("../src/pages/dataTemplate.vue"),
       },
     ],
   },

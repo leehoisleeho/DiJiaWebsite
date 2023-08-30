@@ -10,7 +10,7 @@ module.exports = () => {
       return;
     }
     const jwt = require('jsonwebtoken');
-    const secretKey = 'leeho';
+    const secretKey = 'lapland';
     try {
       // 验证token是否过期
       const decoded = jwt.verify(token, secretKey);
