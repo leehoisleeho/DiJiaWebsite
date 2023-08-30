@@ -51,7 +51,7 @@ const getArticleList = () => {
     articleList.value.forEach(element => {
       element.createtime = element.createtime.split('T')[0];
       element.disabled = false;
-      if (element.title === '关于我们') {
+      if (element.title === '关于我们' || element.isbanner === 1) {
         element.disabled = true;
       }
     });

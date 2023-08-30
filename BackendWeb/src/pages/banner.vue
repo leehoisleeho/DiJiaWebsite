@@ -1,8 +1,9 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import {onMounted, ref ,watch} from 'vue'
 import api from '../../API/api'
-import { NButton, NSelect } from 'naive-ui'
+import {NButton, NSelect} from 'naive-ui'
 import config from "../config.js";
+
 const BaseUrl = config.BASE_URL
 
 onMounted(() => {
@@ -78,8 +79,7 @@ const openSelect = () => {
     console.log(value.value)
     api.getArticleList().then(res => {
       options.value = res.data.map(item => {
-        console.log(item.title)
-        if (item.title === value.value) {
+        if (item.title === value.value || item.isbanner === 1) {
           return {
             label: item.title,
             value: item.id,
@@ -134,15 +134,27 @@ const addBanner = () => {
     img: img.value,
     article_title: article_title.value
   }).then(res => {
-    visible.value = false
-    getBannerList()
+    api.editArticle({
+      id: article_id.value,
+      isbanner: 1
+    }).then(res => {
+      visible.value = false
+      getBannerList()
+    })
   })
 }
-const delBanner = (id) => {
+const delBanner = (item) => {
   api.deleteBanner({
-    id: id
+    id: item.id
   }).then(res => {
-    getBannerList()
+    api.editArticle({
+      id: item.article_id,
+      isbanner: 0
+    }).then(res => {
+      console.log(res)
+      visible.value = false
+      getBannerList()
+    })
   })
 }
 const isEdit = ref(false);
@@ -159,6 +171,19 @@ const editBannerBtn = (id) => {
     article_title.value = res.data.article_title
   })
 }
+// 监听article_id 值的改变
+watch(article_id,(newVal, oldVal)=>{
+  if(oldVal === ''){
+    return
+  }else {
+    api.editArticle({
+      id: article_id.value,
+      isbanner: 0
+    }).then(res => {
+      console.log(res)
+    })
+  }
+})
 // 编辑banner
 const editBanner = () => {
   api.editBanner({
@@ -167,13 +192,19 @@ const editBanner = () => {
     img: img.value,
     article_title: article_title.value
   }).then(res => {
-    visible.value = false
-    isEdit.value = false
-    article_id.value = ''
-    article_title.value = ''
-    tempUrl.value = ''
-    file.value = ''
-    getBannerList()
+    api.editArticle({
+      id: article_id.value,
+      isbanner: 1
+    }).then(res => {
+      console.log(res)
+      visible.value = false
+      isEdit.value = false
+      article_id.value = ''
+      article_title.value = ''
+      tempUrl.value = ''
+      file.value = ''
+      getBannerList()
+    })
   })
 }
 </script>
@@ -185,7 +216,7 @@ const editBanner = () => {
         <p class="drawerTitle">添加录播图</p>
         <p class="drawerItemTitle">选择文章</p>
         <n-select :options="options" placeholder="请选择文章" @focus="openSelect" @update:value="selected"
-          v-model:value="value" />
+                  v-model:value="value"/>
         <p class="drawerItemTitle">上传图片</p>
         <div class="imgBox">
           <img :src="tempUrl" alt="" v-show="tempUrl !== ''">
@@ -215,7 +246,7 @@ const editBanner = () => {
           </li>
           <li>
             <t-button theme="primary" style="margin-right: 20px;" @click="editBannerBtn(item.id)">编辑</t-button>
-            <t-button theme="danger" @click="delBanner(item.id)">删除</t-button>
+            <t-button theme="danger" @click="delBanner(item)">删除</t-button>
           </li>
         </ul>
         <div class="add">
@@ -233,7 +264,7 @@ const editBanner = () => {
   opacity: 0;
 }
 
-.imgNone>img {
+.imgNone > img {
   width: 50px;
   height: 50px;
 }
@@ -254,7 +285,7 @@ const editBanner = () => {
   position: relative;
 }
 
-.imgBox>img {
+.imgBox > img {
   width: 100%;
   height: 350px;
   margin-bottom: 20px;
@@ -276,7 +307,7 @@ const editBanner = () => {
   width: 1000px;
 }
 
-.add>img {
+.add > img {
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -288,12 +319,12 @@ const editBanner = () => {
   padding: 20px 0px;
 }
 
-.listItem>li:nth-child(4)>img {
+.listItem > li:nth-child(4) > img {
   width: 100px;
   height: 60px;
 }
 
-.listItem>li {
+.listItem > li {
   flex: 1;
   text-align: center;
   color: #333;
@@ -308,7 +339,7 @@ const editBanner = () => {
   height: 80px;
 }
 
-.listBoxTitle>li {
+.listBoxTitle > li {
   flex: 1;
   text-align: center;
   color: #333;
